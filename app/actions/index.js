@@ -1,5 +1,9 @@
-import * as options from './login/options';
+import * as login_options from './login/login_options';
+import * as account from './user/account';
+import * as location from './user/location';
 
 export const ActionCreators = Object.assign({}, 
-	options
+	login_options, 
+	account,
+	location
 );

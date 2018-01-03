@@ -1,48 +1,42 @@
-import React, { Component } from 'react';
-import {View} from "react-native";
-import { NavigationActions } from 'react-navigation';
-//REDUX
-import { connect } from 'react-redux'
-import {bindActionCreators} from 'redux';
-import {ActionCreators} from '../actions'
-import { BackHandler } from "react-native";
+//DRAWER NAVIGATOR ONLY
+import React from 'react';
+import { View, Text } from 'react-native';
+import { DrawerNavigator } from 'react-navigation';
+import Ionicons from 'react-native-vector-icons/Ionicons'; 
+import DrawerContainer from './DrawerContainer';
+import HomeMainScreen from './Home/HomeMainScreen';
+
+const HomeScreen = () => (
+  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <Text>Home Screen</Text>
+    <Text>Swipe from left to open drawer</Text>
+  </View>
+);
+
+const ProfileScreen = () => (
+  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <Text>Profile Screen</Text>
+  </View>
+);
+
+const ContactScreen = () => (
+  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <Text>Contact Screen</Text>
+  </View>
+);
 
 
-class SampleScreen extends Component {
-	componentDidMount() {
-	    BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
-	  }
-	  componentWillUnmount() {
-	    BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
-	  }
-
-	static navigationOptions = () => ({
-		title: "New Patient"
-	});
-
-	onBackPress = () => {
-	    if (this.props.state.nav.index === 0) {
-	      return false;
-	    }
-	    this.props.navigation.dispatch(NavigationActions.back());
-	    return true;
-	 };
-
-	render(){
-		return(
-			<View style={{flex:1, backgroundColor: '#000'}}>
-			</View>
-		)
-	}
+const RootDrawer = DrawerNavigator({
+  Meetup_Requests:{ 
+    screen: HomeMainScreen,
+    
+  },
+}, {
+  drawerOpenRoute: 'DrawerOpen',
+  drawerCloseRoute: 'DrawerClose',
+  drawerToggleRoute: 'DrawerToggle',
+  drawerWidth: 100
 }
+)
 
-//PROPS
-const mapStateToProps = state => ({
-  state: state
-});
- 
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(ActionCreators, dispatch)
-})
-
-export default connect(mapStateToProps,mapDispatchToProps)(SampleScreen);
+export default RootDrawer;

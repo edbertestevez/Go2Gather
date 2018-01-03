@@ -51,5 +51,11 @@ module.exports = StyleSheet.create({
   },
   bgBlue:{
     backgroundColor: '#435cd8',
+  },
+  subTitle:{
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'center',
+    width: '65%'
   }
 });

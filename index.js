@@ -1,4 +1,4 @@
 import { AppRegistry } from 'react-native';
-import App from './App';
+import Main from './App';
 
-AppRegistry.registerComponent('Go2Gather', () => App);
+AppRegistry.registerComponent('Go2Gather', () => Main);

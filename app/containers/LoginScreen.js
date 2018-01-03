@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text, TextInput, Image, View, StyleSheet, TouchableOpacity, AsyncStorage} from 'react-native';
+import {Text, TextInput, Image, View, StyleSheet, TouchableOpacity, AsyncStorage, BackHandler} from 'react-native';
 import Icon from "react-native-vector-icons/Zocial";
 import ResponsiveImage from 'react-native-responsive-image';
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
@@ -18,45 +18,12 @@ import * as firebase from 'firebase'
 
 class LoginScreen extends Component {
 
-componentDidMount(){
-   //{this.checkLogged}
-   firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      // User is signed in.
-      console.log("LOGGED IN KA NA BE");
-    }else{
-      console.log("WALA PA BE");
-    }
-  });
-}
-
-fb(){
-    // const resetAction = NavigationActions.navigate({ 
-    //   routeName: 'Sample'
-    // });
-    // this.props.navigation.dispatch(resetAction);
-
-}
-
-
-
-checkLogged = async () =>  {
-  console.log("LLL");
-  try {
-    const value = await AsyncStorage.getItem('UID');
-    if (value !== null){
-      // We have data!!
-        console.log(value);
-      }
-    } catch (error) {
-      console.log(error);
-      // Error retrieving data
-    } 
-}
-
-saveData(){
-  AsyncStorage.setItem("UID", "123")
-}
+componentDidMount() {
+    var that = this;
+    BackHandler.addEventListener('hardwareBackPress', function() {
+    that.props.navigation.goBack();return true;
+   });
+  }
 
 render(){
 
@@ -64,14 +31,13 @@ render(){
   return(
 		<View style={styles.mainContainer}>
 	    	
-        <ResponsiveImage source={require('../img/logo.png')} initWidth="400" initHeight="400"/>
+        <ResponsiveImage source={require('../img/logo.png')} initWidth="380" initHeight="380"/>
  		  	<Text style={styles.logoname}>Go2Gather</Text>
  		  	 
         <LoginOptions
-        	googleSignin = {()=>this.props.actions.func_googleSignin()}
+          googleSignin = {()=>this.props.navigation.navigate("Drawer")}
+        	//googleSignin = {()=>this.props.actions.func_googleSignin()}
         	fbSignin = {()=>this.props.actions.func_googleSignout()}
-          //googleSignin = {()=>this.saveData()}
-          //fbSignin = {this.checkLogged}
         />
         <Text style={{color: 'white'}}>
 
