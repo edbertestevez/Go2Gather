@@ -14,16 +14,18 @@ import LoginOptions from '../components/login/loginOptions';
 import { connect } from 'react-redux'
 import {bindActionCreators} from 'redux';
 import {ActionCreators} from '../actions'
-import * as firebase from 'firebase'
+import * as firebase from 'firebase';
+import {Spinner} from 'native-base';
 
 class LoginScreen extends Component {
 
-componentDidMount() {
-    var that = this;
-    BackHandler.addEventListener('hardwareBackPress', function() {
-    that.props.navigation.goBack();return true;
-   });
+componentWillMount(){
+    GoogleSignin.configure({
+        //iosClientId: "<FROM DEVELOPER CONSOLE>", // only for iOS
+        webClientId: "206519716919-v93fl7b6pupffparflkjqpl7f77hpr4h.apps.googleusercontent.com",
+      })
   }
+  
 
 render(){
 
@@ -35,14 +37,18 @@ render(){
  		  	<Text style={styles.logoname}>Go2Gather</Text>
  		  	 
         <LoginOptions
-          googleSignin = {()=>this.props.navigation.navigate("Drawer")}
-        	//googleSignin = {()=>this.props.actions.func_googleSignin()}
-        	fbSignin = {()=>this.props.actions.func_googleSignout()}
+          //googleSignin = {()=>this.props.navigation.navigate("Drawer")}
+        	googleSignin = {()=>this.props.actions.func_googleSignin()}
+        	fbSignin = {()=>this.props.navigation.navigate('Sample')}
+          //fbSignin = {()=>this.props.actions.func_googleSignout()}
         />
-        <Text style={{color: 'white'}}>
 
-        </Text>
-
+        {this.props.state.account.isCheckingAccount ?
+        <View>
+          <Spinner color='#00aaaa' style={{marginTop:-24}}/>
+          <Text style={{color: 'white', fontSize:12, marginTop:-15}}>Logging in account . . </Text>
+        </View>
+        :null}
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}> &#9400; All Rights Reserved</Text>
           <Text style={styles.footerText}> DecypherApps</Text>

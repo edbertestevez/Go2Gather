@@ -10,7 +10,8 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  BackHandler
 } from 'react-native';
 import { connect } from 'react-redux';
 import { StackNavigator } from 'react-navigation';
@@ -20,38 +21,50 @@ import {Root} from 'native-base';
 //REDUX
 import {Provider} from 'react-redux'
 import configureStore from './app/configureStore'
-//CONTAINERS
-//import {AppWithNavigationState,appReducer} from './app/AppNavigator'
-
-//REDUCERS
-//USERS
-import account from './app/reducers/user/account';
-import location from './app/reducers/user/location';
-
 import { addNavigationHelpers } from 'react-navigation';
-
 import {AppNavigator} from './app/AppNavigator';
-
-//STORE
 import{ createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 
-const initialState = AppNavigator.router.getStateForAction(NavigationActions.init());
+
+//REDUCERS
+import account from './app/reducers/user/account';
+import location from './app/reducers/user/location';
+
+
+const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('Splash'));
 
 const navReducer = (state = initialState, action) => {
   const nextState = AppNavigator.router.getStateForAction(action, state);
-
-  // Simply return the original `state` if `nextState` is null or undefined.
   return nextState || state;
 };
 
+
+//REDUCER INDEX
 const appReducer = combineReducers({
   account,
   nav: navReducer,
   location
 });
 
+
+
 class App extends React.Component {
+  componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
+  }
+  onBackPress = () => {
+    const { dispatch, nav } = this.props;
+    if (nav.index === 0) {
+      return false;
+    }
+    dispatch(NavigationActions.back());
+    return true;
+  };
+
   render() {
     return (
       <AppNavigator navigation={addNavigationHelpers({
@@ -72,6 +85,7 @@ const store = createStore(appReducer, applyMiddleware(thunk));
 
 
 export default class Main extends Component<{}> {
+
   render() {
     return (
         <Root>

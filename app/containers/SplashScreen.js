@@ -13,10 +13,11 @@ import firebaseApp from '../config/firebase';
 import * as firebase from 'firebase';
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 import ResponsiveImage from 'react-native-responsive-image';
+import {Spinner} from 'native-base';
 
 class SampleScreen extends Component {
-
 	checkLogged(action){
+		const that = this;
 		const { navigate } = this.props.navigation;
 		console.log("Checking if logged in . . .");
 		let route;
@@ -25,22 +26,25 @@ class SampleScreen extends Component {
 				firebase.database().ref("/users/"+user.uid).on('value', (snapshot) => {
 					if(snapshot.exists()){
 						action.updateAccount(snapshot.key,snapshot.val());
+						console.log('user logged');
+						//DRAWER INSTEAD OF HOME KAY AMO MANA ANG IYA DEFAULT STACK SA DRAWER ANG HOME
+						route="Drawer";
+						setTimeout(()=>navigate(route), 1500);
 					}
-				});
-
-				console.log('user logged');
-				//DRAWER INSTEAD OF HOME KAY AMO MANA ANG IYA DEFAULT STACK SA DRAWER ANG HOME
-				route="Drawer";
-				navigate(route);
+				})
+					
+				
 		    }else{
 		      	console.log('not logged');
 		      	route="Login";
-		      	navigate(route);
+		      	setTimeout(()=>navigate(route), 1000);
 		    }
 		});
 	}
+
 	componentWillMount(){
-		setTimeout(()=>this.checkLogged(this.props.actions), 2000);
+		console.log("SPLASH NAVIGATION ROUTES", this.props.state.nav)
+		setTimeout(()=>this.checkLogged(this.props.actions), 1000);
 		
 		GoogleSignin.configure({
 	      //iosClientId: "<FROM DEVELOPER CONSOLE>", // only for iOS
@@ -52,9 +56,16 @@ class SampleScreen extends Component {
 	render(){
 		return(
 			<View style={{flex:1, backgroundColor: '#033031', alignItems:'center'}}>
-				<ResponsiveImage source={require('../img/logo.png')} style={{marginTop: 50}} initWidth="350" initHeight="350"/>
+				<ResponsiveImage source={require('../img/logo.png')} style={{marginTop: 25}} initWidth="350" initHeight="350"/>
 				<Text style={styles.logoname}>Go2Gather</Text>
-				<Text style={styles.subTitle}>Gather and meetup with others and know their current location.</Text>
+				<Text style={styles.subTitle}>Meetups made easier</Text>
+				<Spinner color='#00aaaa' />
+				<Text style={{color: 'white', fontSize:12, marginTop:-15}}>Verifying Account</Text>
+
+				<View style={styles.footerContainer}>
+					<Text style={styles.footerText}>All Rights Reserved 2018</Text>
+					<Text style={styles.footerName}>Decypher Apps</Text>
+				</View>
 			</View>
 		)
 	}

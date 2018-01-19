@@ -3,6 +3,7 @@ package com.go2gather;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.github.wumke.RNExitApp.RNExitAppPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
@@ -27,10 +28,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
-            new VectorIconsPackage(),
+            new RNExitAppPackage(),
             new MapsPackage(),
             new RNGoogleSigninPackage(),
-            new RNGooglePlacesPackage()
+            new RNGooglePlacesPackage(),
+            new VectorIconsPackage()
       );
     }
 

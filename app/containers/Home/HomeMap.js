@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import {View, TouchableHighlight, StyleSheet, Text} from "react-native";
+import {View, TouchableHighlight, StyleSheet, Text,Image} from "react-native";
 import { NavigationActions } from 'react-navigation';
 //REDUX
 import { connect } from 'react-redux'
 import {bindActionCreators} from 'redux';
 import {ActionCreators} from '../../actions'
 import { BackHandler } from "react-native";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapViewDirections from 'react-native-maps-directions';
-import {Container, Header, Content, Footer, StyleProvider, Icon, Left, Right, Button, Body, Title, Card, CardItem} from 'native-base';
+import {Container, Header, Fab, Content, Footer, StyleProvider, Left, Right, Button, Body, Title, Card, CardItem} from 'native-base';
 //MAPS
 import MapView, {Marker, Callout} from 'react-native-maps';
 //import GeocoderAPI from '../../config/geocoder';
@@ -20,25 +21,43 @@ const defaultAPIKey = "AIzaSyD2AcRJkV3zokjx3oxmLJHBQOmRelqKPY0";
 Geocoder.setApiKey(defaultAPIKey);
 
 class HomeMap extends Component {
-	componentDidMount(){
-		//CHANGE THIS TO GEOCODER FOR EXACT LONG AND LAT
-		console.log("Getting Initial Position . . .");
-		RNGooglePlaces.getCurrentPlace()
-        .then((results) => {
-          console.log(results);
-          var initialPosition = {
-            latitude: results[0].latitude,
-            longitude: results[0].longitude,
-            place: results[0].name
-          }
-          this.props.actions.updateLocation(initialPosition);
-          })
-        .catch((error) => console.log(error.message));
-	}
+	constructor(props) {
+	  super(props);
 	
-	componentWillUnmount() {
-	    navigator.geolocation.clearWatch(this.watchId);
+	  this.state = {
+	  	regionPoint:{
+				latitude: 0,
+				longitude: 0 ,	
+				longitudeDelta:0.004,
+				latitudeDelta:0.004,
+			}
+	  };
 	}
+
+	componentDidMount(){
+		this.setState({
+			regionPoint:{
+				latitude: this.props.state.account.latitude,
+				longitude: this.props.state.account.longitude,	
+				longitudeDelta:0.004,
+				latitudeDelta:0.004,
+			}
+		})
+		//console.log(this.props);
+	}
+
+	gotoMyLocation(){
+		var that = this;
+		this.setState({
+			regionPoint:{
+				latitude: that.props.state.account.latitude,
+				longitude: that.props.state.account.longitude,	
+				longitudeDelta:0.004,
+				latitudeDelta:0.004,
+			}
+		})
+	}
+
 	render(){
 		return(
 			<View style={{flex:1}}>
@@ -46,10 +65,10 @@ class HomeMap extends Component {
 				style={StyleSheet.absoluteFill}
 				mapType={this.props.state.location.mapType}
 	        	region={{
-		            latitude: this.props.state.location.latitude,
-		            longitude: this.props.state.location.longitude,
-		            latitudeDelta: this.props.state.location.latitudeDelta,
-		            longitudeDelta: this.props.state.location.longitudeDelta,
+		            latitude: this.state.regionPoint.latitude,
+		            longitude: this.state.regionPoint.longitude,
+		            latitudeDelta: this.state.regionPoint.latitudeDelta,
+		            longitudeDelta: this.state.regionPoint.longitudeDelta,
 		          }}>   
 
 		        <MapView.Marker
@@ -57,7 +76,16 @@ class HomeMap extends Component {
 			    		latitude: this.props.state.location.latitude,
 			            longitude: this.props.state.location.longitude,
 			    	}}
-			    	pinColor="green"/>
+			    >
+			    <View>
+			    	<Image style={{width: 60, height:60}}source={require('../../img/usermarker.png')}/>
+			    	<Image
+				        style={{width: 38, height: 38, position:'absolute', borderRadius:19, marginLeft:11, marginTop:4}}
+				        source={{uri: this.props.state.account.photo}}
+				    />
+			    </View>
+			    	
+			    </MapView.Marker>
 
 
 			    {this.props.state.location.searchPlace.isActive ?	
@@ -65,9 +93,15 @@ class HomeMap extends Component {
 			    		coordinate={{
 			    			latitude: this.props.state.location.searchPlace.latitude,
 	                		longitude: this.props.state.location.searchPlace.longitude,
-			    	}}/> : null}
+			    	}}>
 
-			    {this.props.state.location.searchPlace.isActive ?	
+			    	<View><Image style={{width: 60, height:60}}source={require('../../img/maplogo.png')}/></View>
+			    
+			    	</MapView.Marker> 
+
+			    	: null}
+
+			    {this.props.state.location.searchPlaceStatus ?	
 			    <MapViewDirections
 	              origin={{
 	              	//users location
@@ -80,12 +114,26 @@ class HomeMap extends Component {
 	                longitude: this.props.state.location.searchPlace.longitude,
 	              }}
 	              apikey={"AIzaSyD2AcRJkV3zokjx3oxmLJHBQOmRelqKPY0"}
-	              strokeWidth={8}
-	              strokeColor="blue"
+	              strokeWidth={6}
+	              strokeColor="green"
+	              /*onReady={(result) => {
+		              console.log("DIRECTION",result);
+		            }}
+		            onError={(errorMessage) => {
+		              // console.log('GOT AN ERROR');
+		            }}*/
 	            /> 
 	            :null}
 	        </MapView>
 	          
+	          <Fab
+		            style={{backgroundColor:"#f2f2f2",zIndex:5}}
+		            position="bottomRight"
+		            onPress={()=>this.gotoMyLocation()}>
+		            
+		            <Icon name="my-location" style={{ color:"#4f4f4f"}}/>
+		        </Fab>
+
 			</View>
 		);
 	}

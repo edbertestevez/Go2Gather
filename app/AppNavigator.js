@@ -9,6 +9,10 @@ import SplashScreen from './containers/SplashScreen';
 import HomeMainScreen from './containers/Home/HomeMainScreen';
 import DrawerContainer from './containers/DrawerContainer';
 import ProfileScreen from './containers/Profile/ProfileScreen';
+import MeetupScreen from './containers/Meetup/MeetupScreen';
+import AddMeetupScreen from './containers/Meetup/AddMeetupScreen';
+import MeetupMapScreen from './containers/Meetup/MeetupMapScreen';
+import RequestScreen from './containers/Requests/RequestScreen';
 import {Icon} from 'native-base';
 
 //EDIT HERE 
@@ -21,6 +25,12 @@ const mainDrawer = DrawerNavigator({
   },
   Profile:{
     screen: ProfileScreen,
+  },
+  Meetup:{
+    screen:MeetupScreen,
+  },
+  Requests:{
+    screen:RequestScreen,
   }
 
 },{
@@ -44,6 +54,14 @@ export const AppNavigator = StackNavigator({
   		header: null
   	}
   },
+  Drawer: { 
+    screen: mainDrawer, 
+    headerMode: 'float',
+    navigationOptions:{
+      header: null
+    }
+  },
+  //SAMPLE SCREENS FOR TESTING
   HomeMain: { 
     screen: HomeMainScreen,
     headerMode: 'screen',
@@ -57,20 +75,44 @@ export const AppNavigator = StackNavigator({
       header: null
     }
   },
-  Drawer: { 
-    screen: mainDrawer, 
-    headerMode: 'float',
+  Meetup:{
+    screen:MeetupScreen,
     navigationOptions:{
-      header: null
+      header:null
     }
+  },
+  AddMeetup:{
+    screen: AddMeetupScreen,
+    navigationOptions:{
+      title: "New Meetup",
+      headerStyle:{
+        backgroundColor:"#1b5454",
+      },
+      headerTitleStyle:{
+        color: '#fff'
+      },
+    }
+  },
+  MeetupMap:{
+    screen:MeetupMapScreen,
+    navigationOptions:{
+      header:null
+    }
+  },
+  Requests:{
+    screen:RequestScreen,
+    navigationOptions:{
+      header:null
+    }
+  },
+  Sample:{
+    screen:SampleScreen
   }
 },{
-  initialRouteName: 'Drawer',
+  //initialRouteName: 'Splash',
   //DRAWER Kung home, SPLASH kng loading
 });	
-
-//Gin saylo na sa App.js
-/*
+	/*
 const AppWithNavigationState = ({ dispatch, nav }) => (
   <AppNavigator navigation={addNavigationHelpers({ dispatch, state: nav })} />
 );

@@ -1,42 +1,53 @@
-//DRAWER NAVIGATOR ONLY
-import React from 'react';
-import { View, Text } from 'react-native';
-import { DrawerNavigator } from 'react-navigation';
-import Ionicons from 'react-native-vector-icons/Ionicons'; 
-import DrawerContainer from './DrawerContainer';
-import HomeMainScreen from './Home/HomeMainScreen';
+import React, { Component } from 'react';
+import {Text, TextInput, Image, View, StyleSheet, TouchableOpacity, AsyncStorage, BackHandler} from 'react-native';
+import Icon from "react-native-vector-icons/Zocial";
+import ResponsiveImage from 'react-native-responsive-image';
+import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
+//NAVIGATION
+import { StackNavigator } from 'react-navigation';
+import { NavigationActions } from 'react-navigation'
+//STYLE
+import styles from '../styles/style_login';
+//COMPONENTS
+import LoginOptions from '../components/login/loginOptions';
+//REDUX
+import { connect } from 'react-redux'
+import {bindActionCreators} from 'redux';
+import {ActionCreators} from '../actions'
+import * as firebase from 'firebase';
 
-const HomeScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>Home Screen</Text>
-    <Text>Swipe from left to open drawer</Text>
-  </View>
-);
-
-const ProfileScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>Profile Screen</Text>
-  </View>
-);
-
-const ContactScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>Contact Screen</Text>
-  </View>
-);
+class LoginScreen extends Component {
 
 
-const RootDrawer = DrawerNavigator({
-  Meetup_Requests:{ 
-    screen: HomeMainScreen,
-    
-  },
-}, {
-  drawerOpenRoute: 'DrawerOpen',
-  drawerCloseRoute: 'DrawerClose',
-  drawerToggleRoute: 'DrawerToggle',
-  drawerWidth: 100
+
+componentDidMount() {
+    /*var that = this;
+    BackHandler.addEventListener('hardwareBackPress', function() {
+    that.props.navigation.goBack();return true;
+   });*/
+  }
+
+render(){
+
+  console.log("ARI KO SA BAGO",this.props);
+  return(
+    <View style={styles.mainContainer}>
+        
+        <ResponsiveImage source={require('../img/logo.png')} initWidth="380" initHeight="380"/>
+       
+    </View>
+  )
+
+  }
 }
-)
 
-export default RootDrawer;
+//PROPS
+const mapStateToProps = state => ({
+  state: state
+});
+ 
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(ActionCreators, dispatch)
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(LoginScreen);

@@ -25,13 +25,14 @@ class ProfileScreen extends Component {
 	  
 	}
 	componentDidMount() {
-    var that = this;
-    BackHandler.addEventListener('hardwareBackPress', function() {
-    that.props.navigation.goBack();return true;
-   });
-  }
+	    var that = this;
+	    BackHandler.addEventListener('hardwareBackPress', function() {
+	    that.props.navigation.goBack();return true;f
+	   });
+	  }
 
 	componentWillMount(){
+		console.log("PROFILE NAVI", this.props.state.nav)
 		this.setState({
 			name:this.props.state.account.name,
 		  	email: this.props.state.account.email,
@@ -68,17 +69,17 @@ class ProfileScreen extends Component {
 					<Form style={{marginLeft: 10, marginRight: 30, marginTop:15}}>
 		            	<Item stackedLabel>
 		              	<Label>E-mail</Label>
-		              	<Input editable = {true} selectTextOnFocus={true} onChangeText={(email)=>this.setState({email})}>{this.state.email}</Input>
+		              	<Input editable = {false} selectTextOnFocus={true} onChangeText={(email)=>this.setState({email})}>{this.state.email}</Input>
 		            	</Item>
 
 		            	<Item stackedLabel>
 		              	<Label>Phone:</Label>
-		              	<Input editable = {true} selectTextOnFocus={true} onChangeText={(phone)=>this.setState({phone})} placeholder="Enter item name">{this.state.phone}</Input>
+		              	<Input editable = {false} selectTextOnFocus={true} onChangeText={(phone)=>this.setState({phone})} placeholder="Enter item name">{this.state.phone}</Input>
 		            	</Item>
 
 		            	<Item stackedLabel>
 		              	<Label>Photo:</Label>
-		              	<Input editable = {true} selectTextOnFocus={true} onChangeText={(photo)=>this.setState({photo})} placeholder="Enter item name">{this.state.photo}</Input>
+		              	<Input editable = {false} selectTextOnFocus={true} onChangeText={(photo)=>this.setState({photo})} placeholder="Enter item name">{this.state.photo}</Input>
 		            	</Item>
 		            </Form>
 		            

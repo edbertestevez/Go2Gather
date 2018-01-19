@@ -20,4 +20,15 @@ module.exports = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: '#007AFF'
   },
+  infoMap:{
+    width:'100%',
+    height:'auto',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    position:'absolute',
+    zIndex:2,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+  }
 });

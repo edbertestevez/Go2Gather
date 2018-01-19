@@ -1,15 +1,26 @@
-import {LOGIN_USER, LOGOUT_USER, UPDATE_ACCOUNT} from '../../constants'
+import {LOGIN_USER, LOGOUT_USER, UPDATE_ACCOUNT,CHECK_LOGIN} from '../../constants'
 
 //initial values
 const initialState = {
 	uid: '',
-	name: 'Edbert Jason Estevez',
-	email: 'ejestevez@gmail.com',
-	photo: 'http://www.math.uni-frankfurt.de/~person/_4170854.jpg',
-	longitude: '',
-	latitude: '',
+	name: '',
+	email: '',
+	photo: "",
+	longitude:  0,
+	latitude: 0,
 	phone: '',
 	isLogged: null,
+	isCheckingAccount: false,
+
+	
+	// uid: 'r7j4h1KOmOXekp3ZNZ2xXfX7Qgc2',
+	// name: 'Edbert Jason Estevez',
+	// email: 'ejestevez26@gmail.com',
+	// photo: "https://lh3.googleusercontent.com/-7JyHe5tfUL0/AAAAAAAAAAI/AAAAAAAAAAA/AFiYof2xHlhT9sULWd6vTyCo2mvjndXRlA/s96-c/photo.jpg",
+	// longitude:  122.960995,
+	// latitude: 10.696838,
+	// phone: 'Not Available',
+	// isLogged: null,
 }
 
 export default function accountReducer(state = initialState, action){
@@ -34,9 +45,17 @@ export default function accountReducer(state = initialState, action){
 				uid: action.key,
 				name: action.data.name,
 				phone: action.data.phone,
+				photo: action.data.photo,
 				email: action.data.email,
-				longitude: action.data.longitude,
-				latitude: action.data.latitude
+				longitude: action.data.location.longitude,
+				latitude: action.data.location.latitude
+			}
+		}break;
+
+		case CHECK_LOGIN:{
+			return{
+				...state,
+				isCheckingAccount: action.condition
 			}
 		}break;
 		default: return state

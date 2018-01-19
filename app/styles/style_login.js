@@ -10,12 +10,18 @@ module.exports = StyleSheet.create({
   	fontFamily: 'Impact',
   	color: '#d8f9fa',
   	textAlign: 'center',
-  	marginTop: -40,
-    marginBottom: 40
+  	marginTop:-20,
+    marginBottom: 5
   },
   footerText:{
     fontSize: 14,
     color: 'white',
+    textAlign: 'center',
+  },
+  footerName:{
+    fontSize: 14,
+    color: 'white',
+    fontWeight:'bold',
     textAlign: 'center',
   },
   footerContainer:{
@@ -53,9 +59,10 @@ module.exports = StyleSheet.create({
     backgroundColor: '#435cd8',
   },
   subTitle:{
-    fontSize: 18,
+    fontSize: 22,
     color: '#fff',
     textAlign: 'center',
-    width: '65%'
+    width: '65%',
+    marginBottom: 45
   }
 });

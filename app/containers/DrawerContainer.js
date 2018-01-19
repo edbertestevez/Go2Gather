@@ -11,18 +11,21 @@ import {ActionCreators} from '../actions'
 const routes = [
 {title:"Home",routeName:"Home",icon:"home"},
 {title:"Profile",routeName:"Profile",icon:"md-person"},
-{title:"Meetup List",routeName:"Login",icon:"people"},
-{title:"Meetup Requests",routeName:"MeetupRequestsScreen",icon:"md-person-add"},
+{title:"Meetup List",routeName:"Meetup",icon:"people"},
+{title:"Meetup Requests",routeName:"Requests",icon:"md-person-add"},
 {title:"Favorite Location",routeName:"FavoriteLocationScreen",icon:"md-star"}
 ];
 
 class DrawerContainer extends React.Component {
 
+
 componentDidMount() {
-    var that = this;
+  var that = this;
     BackHandler.addEventListener('hardwareBackPress', function() {
-    that.props.navigation.goBack();return true;
+      //alert("GESFS");
+    return true;
    });
+   console.log("DRAWER NA KO", this.props.state.nav)
   }
 
   render() {
@@ -32,7 +35,9 @@ componentDidMount() {
         <Content style={styles.container}>
             <View style={styles.header}>
               <Image source={require('../img/drawer_header.jpg')} style={{width:300, height:170,zIndex:-1,position: 'absolute'}}/>
+              {this.props.state.account.photo ?
               <Image source={{uri: this.props.state.account.photo}} style={styles.circleImage}/>
+              :null}
               <Text style={styles.accountName}>{this.props.state.account.name}</Text>
               <Text style={styles.accountEmail}>{this.props.state.account.email}</Text>
             </View>
@@ -52,7 +57,9 @@ componentDidMount() {
           />
         </Content>
         <Footer style={{backgroundColor:'#fafafa', height:65, justifyContent: 'center', alignItems:'center', padding:10}}>
-            <Button style={{width:250, backgroundColor:'#660000', marginBottom:20, justifyContent:'center'}}>
+            <Button 
+              style={{width:250, backgroundColor:'#660000', marginBottom:20, justifyContent:'center'}}
+              onPress={()=>this.props.actions.func_googleSignout()}>
               <Text style={{color:'white', fontSize:14}}>Logout</Text>
             </Button>
         </Footer>
