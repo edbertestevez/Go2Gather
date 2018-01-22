@@ -13,3 +13,10 @@ export const SEARCH_GOOGLE_PLACE_MEETUP = 'SEARCH_GOOGLE_PLACE_MEETUP'
 export const CHANGE_MAPTYPE = 'CHANGE_MAPTYPE'
 export const TOGGLE_DIRECTION = 'TOGGLE_DIRECTION'
 export const CLOSE_DIRECTION = 'CLOSE_DIRECTION'
+
+//TOAST MESSAGES
+//meetup
+export const ADD_MEETUP_SUCCESS = "Meetup successfully created"
+//request
+export const REQUEST_ACCEPT_SUCCESS = "Request successfully accepted"
+export const REQUEST_DECLINE_SUCCESS = "Request successfully declined"

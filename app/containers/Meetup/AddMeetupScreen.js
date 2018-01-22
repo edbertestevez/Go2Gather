@@ -16,6 +16,7 @@ import DatePicker from 'react-native-datepicker';
 import Moment from 'react-moment';
 import styles from '../../styles/styles_main'
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import * as constants from '../../constants'
 
 class AddMeetupScreen extends Component {
 
@@ -63,6 +64,7 @@ class AddMeetupScreen extends Component {
         	firebase.database().ref("/meetups/"+new_key+"/users/"+user_uid).set({
             	status: "active"
         	})
+        	.then(ToastAndroid.show(constants.ADD_MEETUP_SUCCESS, ToastAndroid.SHORT))
         )
         
     }

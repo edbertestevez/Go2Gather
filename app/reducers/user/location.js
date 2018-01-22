@@ -110,6 +110,7 @@ export default function accountReducer(state = initialState, action){
 					address:'',
 					isActive: false
 				},
+				searchPlaceStatus:false
 			}
 		}break;
 

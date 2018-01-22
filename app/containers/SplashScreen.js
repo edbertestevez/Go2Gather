@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text} from "react-native";
+import {View, Text, ToastAndroid} from "react-native";
 import { NavigationActions } from 'react-navigation';
 //REDUX
 import { connect } from 'react-redux'
@@ -25,11 +25,12 @@ class SampleScreen extends Component {
 			if (user) {
 				firebase.database().ref("/users/"+user.uid).on('value', (snapshot) => {
 					if(snapshot.exists()){
+						var user_name = snapshot.child("name").val();
 						action.updateAccount(snapshot.key,snapshot.val());
 						console.log('user logged');
 						//DRAWER INSTEAD OF HOME KAY AMO MANA ANG IYA DEFAULT STACK SA DRAWER ANG HOME
 						route="Drawer";
-						setTimeout(()=>navigate(route), 1500);
+						setTimeout(()=>{navigate(route),ToastAndroid.show("Welcome, "+user_name+"!",ToastAndroid.SHORT)}, 1500);
 					}
 				})
 					

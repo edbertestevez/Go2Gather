@@ -179,8 +179,8 @@ class HomeMainScreen extends Component {
 		            </Button>
 		            
 		            <Button
-		            	onPress={()=>this.props.navigation.navigate('Sample')} 
-		            	//onPress={()=>this.props.actions.changeMapType("hybrid")}
+		            	//onPress={()=>this.props.navigation.navigate('Sample')} 
+		            	onPress={()=>this.props.actions.changeMapType("hybrid")}
 		            	active={this.props.state.location.mapType==='hybrid'} >
 		              <Text>Hybrid</Text>
 		            </Button>
