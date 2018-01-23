@@ -13,6 +13,7 @@ import MeetupScreen from './containers/Meetup/MeetupScreen';
 import AddMeetupScreen from './containers/Meetup/AddMeetupScreen';
 import MeetupMapScreen from './containers/Meetup/MeetupMapScreen';
 import AddMeetupFriendScreen from './containers/Meetup/AddMeetupFriendScreen';
+import ViewMeetupScreen from './containers/Meetup/ViewMeetupScreen';
 import RequestScreen from './containers/Requests/RequestScreen';
 
 import {Icon} from 'native-base';
@@ -79,6 +80,12 @@ export const AppNavigator = StackNavigator({
   },
   Meetup:{
     screen:MeetupScreen,
+    navigationOptions:{
+      header:null
+    }
+  },
+  ViewMeetup:{
+    screen:ViewMeetupScreen,
     navigationOptions:{
       header:null
     }

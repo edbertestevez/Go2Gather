@@ -1,4 +1,5 @@
-import {UPDATE_MEETUP_FRIENDS, SEARCH_GOOGLE_PLACE_MEETUP, MEETUP_NAME,MEETUP_TIME,MEETUP_DATE,MEETUP_CLEAR_FORM} from '../../constants'
+import {UPDATE_MEETUP_FRIENDS, SEARCH_GOOGLE_PLACE_MEETUP, MEETUP_NAME,MEETUP_TIME,MEETUP_DATE,MEETUP_CLEAR_FORM,
+UPDATE_MEETUP_LIST} from '../../constants'
 
 //initial values
 const initialState = {
@@ -19,11 +20,20 @@ const initialState = {
 		place: '',
 		address:'',
 		isActive: false
-	}
+	},
+	meetupList:[]
 }
 
 export default function accountReducer(state = initialState, action){
 	switch(action.type){
+
+		case UPDATE_MEETUP_LIST:{
+			return{
+				...state,
+				meetupList:action.array
+			}
+		}break;
+
 		case UPDATE_MEETUP_FRIENDS:{
 			return{
 				...state,

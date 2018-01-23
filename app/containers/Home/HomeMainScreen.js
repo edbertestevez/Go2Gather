@@ -76,7 +76,6 @@ class HomeMainScreen extends Component {
 	      webClientId: "206519716919-v93fl7b6pupffparflkjqpl7f77hpr4h.apps.googleusercontent.com",
 	    })
 	    
-
 		//CHANGE THIS TO GEOCODER FOR EXACT LONG AND LAT
 		//console.log("Getting Initial Position . . .");
 		RNGooglePlaces.getCurrentPlace()
@@ -89,6 +88,10 @@ class HomeMainScreen extends Component {
           this.props.actions.updateLocation(this.props.state.account, initialPosition);
           })
         .catch((error) => console.log(error.message));
+		
+		//UPDATE HERE!!!!!!!!!
+        //pre-fetch all user's data
+        this.props.actions.loadMeetupData(this.props.state.account.uid); //meetups
 	}
 
 	componentWillUnmount() {

@@ -21,6 +21,8 @@ export const MEETUP_DATE = 'MEETUP_DATE'
 export const MEETUP_TIME = 'MEETUP_TIME'
 export const MEETUP_CLEAR_FORM = 'MEETUP_CLEAR_FORM'
 
+export const UPDATE_MEETUP_LIST = 'UPDATE_MEETUP_LIST'
+
 //TOAST MESSAGES
 //meetup
 export const ADD_MEETUP_SUCCESS = "Meetup successfully created"

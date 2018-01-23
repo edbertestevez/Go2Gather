@@ -20,7 +20,7 @@ class MeetupScreen extends Component {
 	  super(props);
 	  let dsMeetups = new ListView.DataSource({rowHasChanged:(r1, r2)=>r1!==r2});
 		this.state = {
-	      meetups:[],
+	      //meetups:[],
 			isGettingData: true
 	    };
 	    this.meetupList = [];
@@ -29,7 +29,7 @@ class MeetupScreen extends Component {
 
 	componentWillMount(){
 		//this.getList("r7j4h1KOmOXekp3ZNZ2xXfX7Qgc2");
-		this.getList(this.props.state.account.uid);
+		//this.getList(this.props.state.account.uid);
 	}
 
 	componentDidMount() {
@@ -37,9 +37,15 @@ class MeetupScreen extends Component {
 	    BackHandler.addEventListener('hardwareBackPress', function() {
 	    that.props.navigation.goBack();return true;
 	   });
+
+	    //sample
+	    this.setState({
+	    	isGettingData:false
+	    })
 	}
 
-	getList(user_uid){
+	/*BASIS NI PRE
+		getList(user_uid){
 		var that = this;
 		//Add data
 		firebase.database().ref("/meetups_users/"+user_uid).on('child_added', (snapshot) =>{
@@ -61,9 +67,6 @@ class MeetupScreen extends Component {
 					meetups:newMeetups
 				})
 			}
-			
-			//that.state.meetups.filter( (item, index) => indexRemove !== index)
-			//console.log("REMOVED",that.state.meetups)
 		
 		});
 	}
@@ -155,7 +158,7 @@ class MeetupScreen extends Component {
 				console.log("DATA AFTER REMOVED",that.state.meetups)
 			}
 		});
-	}
+	}*/
 
 	render(){
 		return(
@@ -177,7 +180,7 @@ class MeetupScreen extends Component {
 	      			
 	      			<FlatList
 	      				extraData={this.state}
-	      				data={this.state.meetups}
+	      				data={this.props.state.meetups.meetupList}
 	      				renderItem={({item,index})=>{
 	      					return(
 	      						<TouchableOpacity 

@@ -42,5 +42,15 @@ module.exports = StyleSheet.create({
   },
   directionButtonOff:{
     color:'#5b5d60',
+  },
+  viewMeetupTitle:{
+    color:"white",
+    fontSize:23,
+    fontWeight:"bold",
+    marginBottom:15
+  },
+  roundButton:{
+    paddingLeft:15, paddingRight:25, marginBottom:20,marginRight:8
   }
+  
 });

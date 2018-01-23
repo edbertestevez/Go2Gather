@@ -30,6 +30,7 @@ class MeetupScreen extends Component {
 	}
 
 	componentWillMount(){
+		//console.log("CURRENT STATE", this.props.state)
 		// this.getRequestsList(this.props.state.account.uid);
 		this.getRequestsList("6qtCXPySzpN0LYg79kc0Ex4046m1");
 	}
