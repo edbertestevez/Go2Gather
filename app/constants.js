@@ -14,9 +14,18 @@ export const CHANGE_MAPTYPE = 'CHANGE_MAPTYPE'
 export const TOGGLE_DIRECTION = 'TOGGLE_DIRECTION'
 export const CLOSE_DIRECTION = 'CLOSE_DIRECTION'
 
+//MEETUPS
+export const UPDATE_MEETUP_FRIENDS = 'UPDATE_MEETUP_FRIENDS'
+export const MEETUP_NAME = 'MEETUP_NAME'
+export const MEETUP_DATE = 'MEETUP_DATE'
+export const MEETUP_TIME = 'MEETUP_TIME'
+export const MEETUP_CLEAR_FORM = 'MEETUP_CLEAR_FORM'
+
 //TOAST MESSAGES
 //meetup
 export const ADD_MEETUP_SUCCESS = "Meetup successfully created"
+export const INCOMPLETE_FORM = "Please fill up all fields"
+export const INCOMPLETE_FRIEND = "Select at least one (1) friend for the meetup"
 //request
 export const REQUEST_ACCEPT_SUCCESS = "Request successfully accepted"
 export const REQUEST_DECLINE_SUCCESS = "Request successfully declined"
