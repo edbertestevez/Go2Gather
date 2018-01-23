@@ -56,7 +56,26 @@ export function searchGooglePlace(initialPosition){
 	}
 }
 
-
+export function searchGooglePlaceMeetup(initialPosition){
+	return (dispatch) => {
+		RNGooglePlaces.openAutocompleteModal({
+	      country: "PH",
+	      latitude: initialPosition.latitude,
+	      longitude: initialPosition.longitude,
+	      radius: 50
+	    })
+	      .then((place) => {
+	      	console.log(place)
+	        //alert(JSON.stringify(place))
+	        dispatch(setGooglePlaceSearchMeetup(place));
+	      console.log(place);
+	      })
+	      .catch(error => {
+	        alert("Direction not available");
+	        console.log(error.message);
+	      })
+	}
+}
 
 //FUNCTIONS
 function locationUpdate(data){
@@ -75,7 +94,13 @@ function setGooglePlaceSearch(data){
   }
 }
 
-
+function setGooglePlaceSearchMeetup(data){
+  //console.log("Opening Google Place Search For Meetup. . . ");
+  return{
+    type: constants.SEARCH_GOOGLE_PLACE_MEETUP,
+    data
+  }
+}
 
 function mapTypeChange(data){
   return{

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, TouchableOpacity, ToastAndroid} from "react-native";
+import {View, Text, TouchableOpacity} from "react-native";
 import { NavigationActions } from 'react-navigation';
 //REDUX
 import { connect } from 'react-redux'
@@ -10,14 +10,14 @@ import { BackHandler, ListView } from "react-native";
 import firebaseApp from '../../config/firebase';
 import * as firebase from 'firebase';
 import ResponsiveImage from 'react-native-responsive-image';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Container, Header, Content, Form, Input, Spinner, Item, Label, Footer, StyleProvider, Left, Right, Button, Body, Title, Card, CardItem} from 'native-base';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {Container, Header, Content, Form, Input, Item, Label, Footer, StyleProvider, Left, Right, Button, Body, Title, Card, CardItem} from 'native-base';
 import DatePicker from 'react-native-datepicker';
 import Moment from 'react-moment';
 import styles from '../../styles/styles_main'
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import * as constants from '../../constants'
-import MultiSelect from 'react-native-multiple-select';
+
 class AddMeetupScreen extends Component {
 
 	/*NO REDUX FOR NOW*/
@@ -25,110 +25,66 @@ class AddMeetupScreen extends Component {
 	  super(props);
 	
 	  this.state = {
-	  	isCreating: false,
+	  	event_name:'',
+	  	event_date: '',
+	  	event_time: '',
+	  	event_address:'',
+	  	event_location: '',
+	  	longitude: 0,
+	  	latitude: 0,
 	  };
 	  
-	}
-
-	componentDidMount() {	
-	    var that = this;
-		    BackHandler.addEventListener('hardwareBackPress', function() {
-		    that.props.navigation.navigate("Meetup");
-		    return true;
-		});
 	}
 
 	componentWillMount(){
 		console.log("ADD MEETUP NA KO", this.props.state.nav)
 	}
 
-    createMeetup(user_uid){
-    	var that = this;
+    addRecord(user_uid){
+    	//meetup record
+    	let new_key = firebase.database().ref("/meetups_users/"+user_uid).push().getKey();
 
-    	if(that.props.state.meetups.event_name == "" ||
-    		that.props.state.meetups.event_data == "" ||
-    		that.props.state.meetups.event_time == "" ||
-    		that.props.state.meetups.newMeetupLocation.address == "" ||
-    		that.props.state.meetups.newMeetupLocation.place == "" ||
-    		that.props.state.meetups.newMeetupLocation.longitude == 0 ||
-    		that.props.state.meetups.newMeetupLocation.latitude == 0 
-    	){
-    		ToastAndroid.show(constants.INCOMPLETE_FORM, ToastAndroid.SHORT);
-    	}else if(that.props.state.meetups.selectedMeetupFriends.length>0){
-	    	this.setState({isCreating:true})
-	    	let new_key = firebase.database().ref("/meetups_users/"+user_uid).push().getKey();
+    	firebase.database().ref("/meetups_users/"+user_uid+"/"+new_key).set({
+    		status: "active"
+    	})
+    	.then(
+		firebase.database().ref("/meetups/"+new_key+"/data").set({
+            event_name: this.state.event_name,
+			event_date: this.state.event_date,
+			event_time: this.state.event_time,
 
-	    	firebase.database().ref("/meetups_users/"+user_uid+"/"+new_key).set({
-	    		status: "active"
-	    	})
-	    	.then(
-			firebase.database().ref("/meetups/"+new_key+"/data").set({
-	            event_name: that.props.state.meetups.event_name,
-				event_date: that.props.state.meetups.event_date,
-				event_time: that.props.state.meetups.event_time,
-
-				event_address: that.props.state.meetups.newMeetupLocation.address,
-				event_location: that.props.state.meetups.newMeetupLocation.place,
-				longitude: that.props.state.meetups.newMeetupLocation.longitude,
-				latitude: that.props.state.meetups.newMeetupLocation.latitude,
-				creator: user_uid 
-	        })
-	        )
-	        .then(
-	        	firebase.database().ref("/meetups/"+new_key+"/users/"+user_uid).set({
-	            	status: "active"
-	        	})
-	        	.then(
-	        		that.props.state.meetups.selectedMeetupFriends.map((record,index)=>{
-	        			let request_key = firebase.database().ref("/requests/"+record.value).push().getKey();
-	        			firebase.database().ref("/requests/"+record.value+"/"+request_key).set({
-	        				meetup_id: new_key,
-	        				requestor: user_uid
-	        			})
-	        		})
-	        	)
-	        	.then(
-	        		// CLEAR ALL SA MEETUP STATE 
-	        		setTimeout(()=>{
-	        			that.props.actions.clearMeetupForm(),
-	        			ToastAndroid.show(constants.ADD_MEETUP_SUCCESS, ToastAndroid.SHORT),
-		    			that.setState({isCreating:false}),
-		    			that.props.navigation.navigate("Meetup")
-		    		}, 2000)
-	        	)
-	        )
-    	}else{
-    		ToastAndroid.show(constants.INCOMPLETE_FRIEND, ToastAndroid.SHORT);
-    	}
+			event_address: this.props.state.location.searchAddPlace.address,
+			event_location: this.props.state.location.searchAddPlace.place,
+			longitude: this.props.state.location.searchAddPlace.longitude,
+			latitude: this.props.state.location.searchAddPlace.latitude,
+			creator: user_uid 
+        })
+        )
+        .then(
+        	firebase.database().ref("/meetups/"+new_key+"/users/"+user_uid).set({
+            	status: "active"
+        	})
+        	.then(ToastAndroid.show(constants.ADD_MEETUP_SUCCESS, ToastAndroid.SHORT))
+        )
         
-    }
-
-
-    removeUser(indexRemove){
-    	var that = this;
-    	var newArray = that.props.state.meetups.selectedMeetupFriends;
-    	newArray.splice(indexRemove,1);
-    	that.props.actions.updateFriendMeetups(newArray)
     }
 
 	render(){
 		return(
 			<Container>
-				<Content padder style={{flex:1}}>
+				<Content padder>
 					<Form>
 		            	<Item style={{width:'90%',height:50}}>
 			              	<Left style={styles.formCustIcon}>
 			              	<Icon name="nature-people" style={{position:'absolute',left:0}} size={25}/>
 			              	</Left>
-			              	<Input style={{textAlign:'center',position:'absolute',width:'100%',fontSize:16}} selectTextOnFocus={true} placeholder="Event Name" 
-			              		onChangeText={(event_name)=>this.props.actions.enter_event_name(event_name)}>{this.props.state.meetups.event_name}
-			              	</Input>
+			              	<Input style={{textAlign:'center',position:'absolute',width:'100%',fontSize:16}} selectTextOnFocus={true} placeholder="Event Name" onChangeText={(event_name)=>this.setState({event_name})}>{this.state.event_name}</Input>
 		            	</Item>
 
 		            	<DatePicker
 					        style={{flex:1,width: '90%', height: 45, marginTop:20, borderBottomWidth:1,borderBottomColor:"#cacaca",marginLeft:15,
 					            }}
-					        date={this.props.state.meetups.event_date}
+					        date={this.state.event_date}
 					        mode="date"
 					        placeholder="Select Date"
 					        format="YYYY-MM-DD"
@@ -150,20 +106,20 @@ class AddMeetupScreen extends Component {
 					          },
 					          placeholderText: {
 			                      fontSize: 16,
-			                      color: '#7f7f7f',
+			                      color: '#000',
 			                  },
 			                  dateText:{
 			                  	justifyContent: 'flex-start',
 			                  }
 					          // ... You can check the source to find the other keys.
 					        }}
-					        onDateChange={(event_date) => {this.props.actions.enter_event_date(event_date)}}
+					        onDateChange={(event_date) => {this.setState({event_date: event_date})}}
 					      />
 
 		            	<DatePicker
 					        style={{flex:1,width: '90%',height: 45, marginTop:20,  borderBottomWidth:1,borderBottomColor:"#cacaca",marginLeft:15,
 					            }}
-					        date={this.props.state.meetups.event_time}
+					        date={this.state.event_time}
 					        mode="time"
 					        placeholder="Select Time"
 					        format="h:mm A"
@@ -184,84 +140,59 @@ class AddMeetupScreen extends Component {
 					          },
 					          placeholderText: {
 			                      fontSize: 16,
-			                      color: '#7f7f7f',
+			                      color: '#000',
 			                  },
 			                  dateText:{
 			                  	justifyContent: 'flex-start',
 			                  }
 					          // ... You can check the source to find the other keys.
 					        }}
-					        onDateChange={(event_time) => {this.props.actions.enter_event_time(event_time)}}
+					        onDateChange={(event_time) => {this.setState({event_time: event_time})}}
 					      />
 		          
 
-					    <Item style={{width:'90%',height: 45, marginTop:12}}>
+					    <Item style={{width:'90%',height: 45, marginTop:20}}>
 			              	<Left style={styles.formCustIcon}>
-			              	<Icon name="account-location" style={{position:'absolute',left:0}} size={25}/>
+			              	<Icon name="add-location" style={{position:'absolute',left:0}} size={25}/>
 			              	</Left>
 			              	<TouchableOpacity 
 			            	onPress={()=>this.props.actions.searchGooglePlaceMeetup(this.props.state.location)}
 			            	style={{width:'100%',height:60, borderBottomWidth:1, borderBottomColor:'#cacaca',marginLeft:0,justifyContent:'center',alignItems:'center'}}>
-				           		{this.props.state.meetups.newMeetupLocation.place?
-				           			<Text style={{fontSize:16}}>{this.props.state.meetups.newMeetupLocation.place}</Text>
+				           		{this.props.state.location.searchAddPlace.place?
+				           			<Text style={{fontSize:16}}>{this.props.state.location.searchAddPlace.place}</Text>
 				           			:<Text style={{fontSize:16}}>Meetup Place</Text>}
 			            	</TouchableOpacity>
 		            	</Item>
 
+		            	
+
+		            	
 		            	{/*}
+		            	<Item >
+		              	<Label>Address</Label>
+		              	<Input editable={false} selectTextOnFocus={true} onChangeText={(event_address)=>this.setState({event_address})} >
+		              		{this.props.state.location.searchAddPlace.address?this.props.state.location.searchAddPlace.address:"N/A"}
+		              	</Input>
+		            	</Item>
+
+		            	<Item >
+		              	<Label>Longitude</Label>
+		              	<Input editable={false} selectTextOnFocus={true} onChangeText={(longitude)=>this.setState({longitude})} >
+		              		{this.props.state.location.searchAddPlace.longitude?this.props.state.location.searchAddPlace.longitude:"N/A"}
+		              	</Input>
+		            	</Item>
+
+		            	<Item >
+		              	<Label>Latitude</Label>
+		              	<Input editable={false} selectTextOnFocus={true} onChangeText={(latitude)=>this.setState({latitude})} >
+		              		{this.props.state.location.searchAddPlace.latitude?this.props.state.location.searchAddPlace.latitude:"N/A"}
+		              	</Input>
+		            	</Item>
+		            	{*/}
+
 		            	<Button full success style={{marginTop: 25,marginLeft:15, marginRight:25}} onPress={()=>this.addRecord(this.props.state.account.uid)}>
 				        	<Text style={{color:'white'}}>Save Record</Text>
 				        </Button>
-				    	*/}
-				    	<Item style={{width:'90%',minHeight: 50, flexWrap:"wrap", marginTop:12}}>
-				    		<Left style={styles.formCustIcon}>
-			              		<Icon name="account-multiple" style={{position:'absolute',left:0}} size={25}/>
-			              	</Left>
-			              	
-			              	{this.props.state.meetups.selectedMeetupFriends.length>0 ?
-			              		this.props.state.meetups.selectedMeetupFriends.map((record,index)=>{
-						          var val = JSON.stringify(record);
-						          return(
-						            <Button 
-						              rounded bordered key={index} 
-						              style={{paddingLeft:12, paddingRight:8, margin:3}}
-						              onPress={()=>this.removeUser(index)}>
-						              <Text style={{marginRight:6}}>{record.label}</Text>
-						              <Icon name='close' style={{color:"#660000"}} size={18}/>
-						            </Button>
-						          )
-						        }):<Text style={{textAlign:'center',position:'absolute',width:'100%',fontSize:16, color:"#7f7f7f"}}>No friends added for meetup</Text>
-			              	}
-				    	</Item>
-				    	
-				    	<Button 
-				    		iconLeft full rounded 
-				    		style={{marginLeft:"4%", marginRight:"6%", marginTop:20, height: 55}}
-				    		onPress={()=>this.props.navigation.navigate("MeetupAddFriend")}>
-				    		<Icon name='account-multiple-plus' size={27} style={{color:"white", marginRight:20}}/>
-				    		<Text style={{color:"white", fontSize:15}}>Add friends for meetup</Text>
-				    	</Button>
-				    	
-
-
-				        {this.state.isCreating ? 
-				        	<Button 
-					    		full iconLeft rounded success 
-					    		style={{marginTop: 7, height:55,marginBottom:15,marginLeft:15, marginRight:25}} 
-						    >
-					        	<Spinner color='#fff' style={{color:"white", marginRight:20}}/>
-					        	<Text style={{color:'white', fontSize:15}}>Saving Meetup Record</Text>
-					        </Button>
-				        	:
-				        	<Button 
-					    		full iconLeft rounded success 
-					    		style={{marginTop: 7, height:55,marginBottom:15,marginLeft:15, marginRight:25}} 
-					    		onPress={()=>this.createMeetup(this.props.state.account.uid)}
-						    >
-					        	<Icon name='check' size={27} style={{color:"white", marginRight:20}}/>
-					        	<Text style={{color:'white', fontSize:15}}>Create Meetup Record</Text>
-					        </Button>
-				        }
 		          	</Form>	
 				</Content>
 

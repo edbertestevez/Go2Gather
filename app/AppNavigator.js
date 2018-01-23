@@ -12,9 +12,7 @@ import ProfileScreen from './containers/Profile/ProfileScreen';
 import MeetupScreen from './containers/Meetup/MeetupScreen';
 import AddMeetupScreen from './containers/Meetup/AddMeetupScreen';
 import MeetupMapScreen from './containers/Meetup/MeetupMapScreen';
-import AddMeetupFriendScreen from './containers/Meetup/AddMeetupFriendScreen';
 import RequestScreen from './containers/Requests/RequestScreen';
-
 import {Icon} from 'native-base';
 
 //EDIT HERE 
@@ -93,7 +91,6 @@ export const AppNavigator = StackNavigator({
       headerTitleStyle:{
         color: '#fff'
       },
-      headerTintColor:"#fff"
     }
   },
   MeetupMap:{
@@ -109,16 +106,7 @@ export const AppNavigator = StackNavigator({
     }
   },
   Sample:{
-    screen:SampleScreen,
-     navigationOptions:{
-      title: "Sample Multi Select Users",
-    }
-  },
-  MeetupAddFriend:{
-    screen:AddMeetupFriendScreen,
-    navigationOptions:{
-      header:null
-    }
+    screen:SampleScreen
   }
 },{
   //initialRouteName: 'Splash',

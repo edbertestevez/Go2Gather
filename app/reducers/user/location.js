@@ -25,7 +25,15 @@ const initialState = {
 		address:'',
 		isActive: false
 	},
-	
+	searchAddPlace:{
+		longitude: 0,
+		latitude: 0,
+		longitudeDelta:0.004,
+		latitudeDelta:0.004,
+		place: '',
+		address:'',
+		isActive: false
+	},
 
 
 
@@ -65,6 +73,21 @@ export default function accountReducer(state = initialState, action){
 			return{
 				...state,
 				mapType:action.data
+			}
+		}break;
+
+		case SEARCH_GOOGLE_PLACE_MEETUP:{
+			return{
+				...state,
+				searchAddPlace:{
+					longitude: action.data.longitude,
+					latitude: action.data.latitude,
+					place: action.data.name,
+					address: action.data.address,
+					longitudeDelta:0.004,
+					latitudeDelta:0.004,
+					isActive: true
+				}
 			}
 		}break;
 

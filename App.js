@@ -30,7 +30,6 @@ import thunk from 'redux-thunk'
 //REDUCERS
 import account from './app/reducers/user/account';
 import location from './app/reducers/user/location';
-import meetups from './app/reducers/meetups/meetups';
 
 
 const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('Splash'));
@@ -44,7 +43,6 @@ const navReducer = (state = initialState, action) => {
 //REDUCER INDEX
 const appReducer = combineReducers({
   account,
-  meetups,
   nav: navReducer,
   location
 });
