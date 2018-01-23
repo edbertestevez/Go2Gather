@@ -10,6 +10,7 @@ import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 import MapViewDirections from 'react-native-maps-directions';
 import {Container, Header, Root, Content, ActionSheet, Fab, Text, Footer, FooterTab, StyleProvider, Left, Right, Button, Body, Title, Card, CardItem} from 'native-base';
 //CONTENT
+import MeetupMap from './MeetupMap';
 import styles from '../../styles/styles_main'
 //import GeocoderAPI from '../../config/geocoder';
 import RNGooglePlaces from 'react-native-google-places';

@@ -2,7 +2,7 @@ import {LOGIN_USER, LOGOUT_USER, UPDATE_ACCOUNT,CHECK_LOGIN} from '../../constan
 
 //initial values
 const initialState = {
-	uid: '',
+	uid: '6qtCXPySzpN0LYg79kc0Ex4046m1',
 	name: '',
 	email: '',
 	photo: "",

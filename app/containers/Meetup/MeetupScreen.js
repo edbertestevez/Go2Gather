@@ -185,13 +185,14 @@ class MeetupScreen extends Component {
 									onPress={()=>this.props.navigation.navigate("MeetupMap", {info:item})}
 									//onPress={()=>alert(JSON.stringify(item))}
 									style={{backgroundColor:'white', marginBottom:5}}>
-									<CardItem style={{marginBottom:5}}>
-								        <View style={{flexDirection:'column', marginRight:50, marginLeft: 15}}>
-									        <Text style={styles.meetupTitle}>{item.event_name}</Text>
-									        <Text style={{fontWeight:'bold'}}>{item.event_location}</Text>
-									        <Text>{item.event_address}</Text>
-									        <Text>{moment(item.event_date).format('LL')}</Text>
-									        <Text>{item.event_time}</Text>
+									<CardItem style={{marginBottom:5, flexWrap:"wrap"}}>
+								        <View style={{flexDirection:'row'}}>
+									        <View style={{flexDirection:'column', width:"100%",flexWrap:"wrap", marginRight:50, marginLeft: 15}}>
+										        <Text style={styles.meetupTitle}>{item.event_name}</Text>
+										        <Text style={{fontWeight:'bold'}}>{item.event_location}</Text>
+										        <Text numberOfLines={1}>{item.event_address}</Text>
+										        <Text>{moment(item.event_date).format('LL')} ({item.event_time})</Text>
+									      	</View>
 								      	</View>
 								     </CardItem>
 								</TouchableOpacity>
