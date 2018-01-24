@@ -92,6 +92,8 @@ class HomeMainScreen extends Component {
 		//UPDATE HERE!!!!!!!!!
         //pre-fetch all user's data
         this.props.actions.loadMeetupData(this.props.state.account.uid); //meetups
+        this.props.actions.loadFriendsData(this.props.state.account.uid); //friends
+        this.props.actions.loadMeetupRequestData(this.props.state.account.uid); //friends
 	}
 
 	componentWillUnmount() {

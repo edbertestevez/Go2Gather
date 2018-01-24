@@ -10,6 +10,12 @@ export function updateAccount(key, data){
 	}
 }
 
+export function updateFriendsLabel(array){
+	return (dispatch) => {
+		dispatch(func_updateFriendsLabel(array));
+	}
+}
+
 //FUNCTIONS
 function accountUpdate(key, data){
   console.log("Updating . . . ");
@@ -17,5 +23,13 @@ function accountUpdate(key, data){
     type: constants.UPDATE_ACCOUNT,
     data,
     key
+  }
+}
+
+//FUNCTIONS
+function func_updateFriendsLabel(array){
+  return{
+    type: constants.UPDATE_FRIENDS_LABEL,
+    array
   }
 }

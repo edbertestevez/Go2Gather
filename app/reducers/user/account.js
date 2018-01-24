@@ -1,4 +1,5 @@
-import {LOGIN_USER, LOGOUT_USER, UPDATE_ACCOUNT,CHECK_LOGIN} from '../../constants'
+import {LOGIN_USER, LOGOUT_USER, UPDATE_ACCOUNT,CHECK_LOGIN,
+UPDATE_FRIENDS_LABEL} from '../../constants'
 
 //initial values
 const initialState = {
@@ -11,6 +12,7 @@ const initialState = {
 	phone: '',
 	isLogged: null,
 	isCheckingAccount: false,
+	friendsLabel:[],
 
 	
 	// uid: 'r7j4h1KOmOXekp3ZNZ2xXfX7Qgc2',
@@ -58,6 +60,13 @@ export default function accountReducer(state = initialState, action){
 				isCheckingAccount: action.condition
 			}
 		}break;
+
+		case UPDATE_FRIENDS_LABEL:{
+			return{
+				...state,
+				friendsLabel: action.array
+			}
+		}
 		default: return state
 	}
 }	

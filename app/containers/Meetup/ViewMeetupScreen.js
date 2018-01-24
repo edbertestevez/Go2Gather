@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, TouchableOpacity, ToastAndroid, Image, Dimensions, ScrollView} from "react-native";
+import {View, Text, TouchableOpacity, ToastAndroid, Image, Dimensions, ScrollView, Alert} from "react-native";
 import { NavigationActions } from 'react-navigation';
 //REDUX
 import { connect } from 'react-redux'
@@ -11,55 +11,145 @@ import ResponsiveImage from 'react-native-responsive-image';
 import {Container, Header, Spinner, Content, Thumbnail, Form, Input, Item, Label, Footer, List, ListItem, StyleProvider, Left, Right, Button, Body, Title, Tab, Tabs, TabHeading} from 'native-base';
 import * as firebase from 'firebase';
 import moment from 'moment';
+import * as constants from '../../constants'
 
 import styles from '../../styles/styles_main'
 
-class MeetupScreen extends Component {
+class ViewMeetupScreen extends Component {
 
 	constructor(props) {
 	  super(props);
 	  let dsMeetups = new ListView.DataSource({rowHasChanged:(r1, r2)=>r1!==r2});
 		this.state = {
-	      meetups:[],
-			isGettingData: true
+	      	meetupData:[],
+	      	creatorName:"",
+			isGettingData: true,
+			goingData:[]
 	    };
-	    this.meetupList = [];
-		
+	    this.going = [];
 	}
 
 	componentWillMount(){
-
+		const {state} = this.props.navigation;
+		this.setState({meetupData:state.params.info})
+		this.getCreatorName(state.params.info.creator);
+		this.getMeetupFriends(state.params.info.key);
 	}
 
 	componentDidMount() {
 	    var that = this;
 	    BackHandler.addEventListener('hardwareBackPress', function() {
-	    that.props.navigation.goBack();return true;
+	    that.props.navigation.navigate("Meetup");
+	    return true;
 	   });
 	}
 
+	getCreatorName(user_uid){
+		firebase.database().ref("/users/"+user_uid+"/name").on("value",(snapshot)=>{
+			this.setState({creatorName:snapshot.val()});
+		});
+	}
+
+	getMeetupFriends(meetup_key){
+		firebase.database().ref("/meetups/"+meetup_key+"/users").on("child_added",(snapshot)=>{
+			//GET USERS DATA
+			firebase.database().ref("/users/"+snapshot.key).on("value",(dataSnap)=>{
+				var name = dataSnap.child("name").val();
+				var email = dataSnap.child("email").val();
+				var photo = dataSnap.child("photo").val();
+				this.going.push({
+					key:snapshot.key,
+					name:name,
+					email:email,
+					photo:photo
+				});
+				this.setState({goingData:this.going})
+			});
+		});
+	}
+
+	confirmDelete(){
+		Alert.alert(
+		  'Confirm Delete',
+		  'Are you sure you want to delete this meetup?',
+		  [
+		  	{text: 'Yes', onPress: () => this.deleteMeetup()},
+		    {text: 'Cancel',  style: 'cancel'},
+		  ],
+		  { cancelable: false }
+		)
+	}
+
+	confirmLeave(){
+		Alert.alert(
+		  'Confirm Leave',
+		  'Are you sure you want to leave from this meetup?',
+		  [
+		  	{text: 'Yes', onPress: () => this.leaveMeetup()},
+		    {text: 'Cancel',  style: 'cancel'},
+		  ],
+		  { cancelable: false }
+		)
+	}
+
+	deleteMeetup(){
+		var that = this;
+		firebase.database().ref("/meetups/"+that.state.meetupData.key).remove()
+		.then(ToastAndroid.show(constants.DELETE_MEETUP_SUCCESS, ToastAndroid.SHORT))
+		.then(that.props.navigation.navigate("Meetup"))	
+	}
+
+	leaveMeetup(){
+		var that = this;
+		firebase.database().ref("/meetups_users/"+that.props.state.account.uid+"/"+that.state.meetupData.key).remove()
+		.then(firebase.database().ref("/meetups/"+that.state.meetupData.key+"/users/"+that.props.state.account.uid).remove())
+		.then(ToastAndroid.show(constants.LEAVE_MEETUP_SUCCESS, ToastAndroid.SHORT))
+		.then(that.props.navigation.navigate("Meetup"))	
+	}
+
 	render(){
+		var headerTab2 = `Going (${this.going.length})`;
 		return(
 			<Container>
-				<Header 
-					//style={styles.header}
-					style={{elevation:0, backgroundColor:"#032d2d"}}
-				>
+				<Header style={{elevation:0, backgroundColor:"#032d2d", zIndex:100}}>
 					<Left>
-						<Icon name="arrow-back" size={27} style={{color:"white"}}/>
+						<Button transparent onPress={()=>this.props.navigation.navigate("Meetup")}>
+							<Icon name="arrow-back" size={27} style={{color:"white"}}/>
+						</Button>
 					</Left>
 					<Right>
-						<Icon name="delete" size={30} style={{color:"white", marginRight:5}}/>
+						{this.state.meetupData.creator != this.props.state.account.uid ?
+						<Button transparent onPress={()=>this.confirmLeave()}>
+							<Text style={{fontSize:15,color:"#e8a92c",marginRight:2}}>Leave Meetup</Text>
+						</Button>
+						:
+						<Button transparent onPress={()=>this.confirmDelete()}>
+							<Icon name="delete" size={30} style={{color:"white", marginRight:5}}/>
+						</Button>
+						}
 					</Right>
 				</Header>
 				<Content>
 					<View style={{width:"100%",backgroundColor:"#032d2d", justifyContent:'center',alignItems:'center'}}>
-						<ResponsiveImage source={require('../../img/logo.png')} initWidth="100" initHeight="100" style={{marginBottom:0, marginTop:-5}}/>
-						<Text style={styles.viewMeetupTitle}>Date Naman Sa Plaza Mart</Text>
+						{/*<ResponsiveImage source={require('../../img/logo.png')} initWidth="100" initHeight="100" style={{marginBottom:0, marginTop:-5}}/>*/}
+						<View>
+							<Text style={styles.viewMeetupTitle}>{this.state.meetupData.event_name}</Text>
+						</View>
+						<View>
+							<Button 
+								iconLeft rounded danger 
+								style={styles.roundButton}
+								onPress={()=>this.props.navigation.navigate("MeetupMap", {info:this.state.meetupData})}
+							>
+								<Icon name="map" size={22} style={{color:"white", marginRight:10}}/>
+								<Text style={{color:"white", fontSize:14}}>View Meetup Map</Text>
+							</Button>
+						</View>
 						<View style={{flexDirection:"row"}}>
 							<Button 
 								rounded success iconLeft 
 								style={styles.roundButton}
+								onPress={()=>this.props.navigation.navigate("EditMeetup",{info:this.state.meetupData})}
 							>
 								<Icon name="edit" size={22} style={{color:"white", marginRight:10}}/>
 								<Text style={{color:"white", fontSize:14}}>Edit Meetup</Text>
@@ -67,6 +157,7 @@ class MeetupScreen extends Component {
 							<Button 
 								rounded primary iconLeft
 								style={styles.roundButton}
+								onPress={()=>this.props.navigation.navigate("SendMeetupInvite",{info:this.state.meetupData, going:this.state.goingData})}
 							>
 								<Icon name="send" size={22} style={{color:"white", marginRight:10}}/>
 								<Text style={{color:"white", fontSize:14}}>Invite Friends</Text>
@@ -85,23 +176,23 @@ class MeetupScreen extends Component {
 			          		<Form style={{paddingLeft:5, paddingRight:10, marginTop:10}}>
 			          			<Item stackedLabel>
 					              <Label style={{fontWeight:"bold"}}>Created By</Label>
-					              <Input value="Edbert Jason Estevez" underlineColorAndroid="transparent" disable/>
+					              <Input value={this.state.creatorName} underlineColorAndroid="transparent" disabled/>
 					            </Item>
 					            <Item stackedLabel>
 					              <Label style={{fontWeight:"bold"}}>Meetup Place</Label>
-					              <Input value="Plaza Mart Bacolod" disabled/>
+					              <Input value={this.state.meetupData.event_location} disabled/>
 					            </Item>
 					            <Item stackedLabel>
 					              <Label style={{fontWeight:"bold"}}>Address</Label>
-					              <Input selectTextOnFocus={true} maxLength = {45} disabled value="San Juan St, Bacolod, 6100 Negros Occidental, Philippines"/>
+					              <Input selectTextOnFocus={true} maxLength = {45} disabled value={this.state.meetupData.event_address}/>
 					            </Item>
 					            <Item stackedLabel>
 					              <Label style={{fontWeight:"bold"}}>Date</Label>
-					              <Input value="January 28, 2018" disabled/>
+					              <Input value={moment(this.state.meetupData.event_date).format('LL')} disabled/>
 					            </Item>
 					            <Item stackedLabel last>
 					              <Label style={{fontWeight:"bold"}}>Time</Label>
-					              <Input value="11:30AM" disabled/>
+					              <Input value={this.state.meetupData.event_time} disabled/>
 					            </Item>
 					            
 					          </Form>
@@ -109,60 +200,32 @@ class MeetupScreen extends Component {
 			          </Tab>
 
 
-			          <Tab heading="Going (4)"  
+			          <Tab heading={headerTab2}
 			          	tabStyle={{backgroundColor:'#f2f7f7'}} 
 			          	textStyle={{color:"#016666"}} 
 			          	activeTextStyle={{color:"#016666"}} 
 			          	activeTabStyle={{backgroundColor:'#f2f7f7'}}>
 			          	<List>
-			            	<ListItem>
-				              <Left style={{flex:1}}>
-				                <Thumbnail width={50} height={50} source={{uri: "https://e27.co/img/no_profile_image.png"}} />
-				              </Left>
-				              <Body style={{flex:3}}>
-				                <Text style={{fontSize:14}}>Sample User</Text>
-				              </Body>
-				              <Right style={{flex:1}}>
-				                <Text style={{color:"#660000"}}>Remove</Text>
-				              </Right>
-				            </ListItem>
-
-				            <ListItem>
-				              <Left style={{flex:1}}>
-				                <Thumbnail width={50} height={50} source={{uri: "https://e27.co/img/no_profile_image.png"}} />
-				              </Left>
-				              <Body style={{flex:3}}>
-				                <Text style={{fontSize:14}}>Sample User</Text>
-				              </Body>
-				              <Right style={{flex:1}}>
-				                <Text style={{color:"#660000"}}>Remove</Text>
-				              </Right>
-				            </ListItem>
-
-				            <ListItem>
-				              <Left style={{flex:1}}>
-				                <Thumbnail width={50} height={50} source={{uri: "https://e27.co/img/no_profile_image.png"}} />
-				              </Left>
-				              <Body style={{flex:3}}>
-				                <Text style={{fontSize:14}}>Sample User</Text>
-				              </Body>
-				              <Right style={{flex:1}}>
-				                <Text style={{color:"#660000"}}>Remove</Text>
-				              </Right>
-				            </ListItem>
-
-				            <ListItem>
-				              <Left style={{flex:1}}>
-				                <Thumbnail width={50} height={50} source={{uri: "https://e27.co/img/no_profile_image.png"}} />
-				              </Left>
-				              <Body style={{flex:3}}>
-				                <Text style={{fontSize:14}}>Sample User</Text>
-				              </Body>
-				              <Right style={{flex:1}}>
-				                <Text style={{color:"#660000"}}>Remove</Text>
-				              </Right>
-				            </ListItem>
-
+			          		{this.state.goingData.map((record,index)=>{
+			          			return(
+			          				<ListItem key={index}>
+						              <Left style={{flex:1}}>
+						                <Thumbnail width={50} height={50} source={{uri: record.photo}} />
+						              </Left>
+						              <Body style={{flex:3}}>
+						                <Text style={{fontSize:14}}>{record.name}</Text>
+						              </Body>
+						              {this.state.meetupData.creator == this.props.state.account.uid?
+						              this.props.state.account.uid != record.key ?
+						              <Right style={{flex:1}}>
+						                <Text style={{color:"#660000"}}>Remove</Text>
+						              </Right>
+						              :<Right style={{flex:1}}/>
+						              :null}
+						            </ListItem>
+			          			)
+			          		})
+			          		}
 			          	</List>
 
 			          	</Tab>
@@ -182,4 +245,4 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(ActionCreators, dispatch)
 })
 
-export default connect(mapStateToProps,mapDispatchToProps)(MeetupScreen);
+export default connect(mapStateToProps,mapDispatchToProps)(ViewMeetupScreen);

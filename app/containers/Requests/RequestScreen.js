@@ -23,16 +23,9 @@ class MeetupScreen extends Component {
 		this.state = {
 	      requestsDataSource: dsRequests,
 	      requests:[],
-	      isGettingData: true
+	      isGettingData: false
 	    };
 	    this.renderRow = this.renderRow.bind(this);
-	    this.requestList = [];
-	}
-
-	componentWillMount(){
-		//console.log("CURRENT STATE", this.props.state)
-		// this.getRequestsList(this.props.state.account.uid);
-		this.getRequestsList("6qtCXPySzpN0LYg79kc0Ex4046m1");
 	}
 
 	componentDidMount() {	
@@ -40,77 +33,17 @@ class MeetupScreen extends Component {
 		    BackHandler.addEventListener('hardwareBackPress', function() {
 		    that.props.navigation.goBack();return true;
 		});
-	}
 
-	getRequestsList(id){
-		var that = this;
-
-		firebase.database().ref("/requests/"+id).on("child_added",(snapshot)=>{
-			//get meetup data
-			var meetup_key = snapshot.child("meetup_id").val();
-			var requestor_id = snapshot.child("requestor").val();
-			var requestor_name = '';
-			var requestor_photo = '';
-			var request_key = snapshot.key;
-			console.log(meetup_key);
-			firebase.database().ref("/users/"+requestor_id).on("value",(dataSnap)=>{
-				requestor_name = dataSnap.child("name").val();
-				requestor_photo = dataSnap.child("photo").val();
-			})
-			firebase.database().ref("/meetups/"+meetup_key).on("child_added",(dataSnap)=>{
-				if(dataSnap.key=="data"){
-					var event_name = dataSnap.child("event_name").val();
-					var event_location = dataSnap.child("event_location").val();
-					var event_address = dataSnap.child("event_address").val();
-					var event_date = dataSnap.child("event_date").val();
-					var event_time = dataSnap.child("event_time").val();
-					var longitude = dataSnap.child("longitude").val();
-					var latitude = dataSnap.child("latitude").val();
-					this.requestList.push({
-						request_key: request_key,
-						meetup_key: meetup_key,
-						event_name:event_name,
-						event_location:event_location,
-						event_address:event_address,
-						event_date:event_date,
-						event_time:event_time,
-						longitude:longitude,	
-						latitude:latitude,	
-						requestor_name:requestor_name,
-						requestor_photo:requestor_photo,
-						requestor_id:requestor_id
-					})
-
-					that.setState({
-					  	requests:this.requestList,
-					  	isGettingData:false
-					})
-					console.log(that.state.requests);
-					//default lang para mag render row
-					this.setState({
-						requestsDataSource: this.state.requestsDataSource.cloneWithRows([{key:1}])
-					})
-				}
-			});
-		});
-
-		firebase.database().ref("/requests/"+id).on("child_removed",(snapshot)=>{
-			var indexRemove = this.state.requests.findIndex((value)=>value.request_key==snapshot.key);
-			
-			if(indexRemove!=-1){
-				var newRequests = that.state.requests;
-				newRequests.splice(indexRemove,1)	
-				that.setState({
-					requests:newRequests
-				})
-			}
-		});
+		this.setState({
+			requestsDataSource: this.state.requestsDataSource.cloneWithRows([{key:1}])
+		})
 	}
 
 	acceptRequest(request_key,meetup_key){
 		var that = this;
-		firebase.database().ref("/requests/6qtCXPySzpN0LYg79kc0Ex4046m1/"+request_key).remove().then(
-			firebase.database().ref("/meetups_users/6qtCXPySzpN0LYg79kc0Ex4046m1/"+meetup_key).set({status:"active"})
+		firebase.database().ref("/requests/"+that.props.state.account.uid+"/"+request_key).remove().then(
+			firebase.database().ref("/meetups_users/"+that.props.state.account.uid+"/"+meetup_key).set({status:"active"})
+			.then(firebase.database().ref("/meetups/"+meetup_key+"/users/"+that.props.state.account.uid).set({status:"active"}))
 			.then(ToastAndroid.show(constants.REQUEST_ACCEPT_SUCCESS, ToastAndroid.SHORT))
 		);
 	}
@@ -118,7 +51,7 @@ class MeetupScreen extends Component {
 	deleteRequest(key){
 		var that = this;
 		//console.log(key);
-		firebase.database().ref("/requests/6qtCXPySzpN0LYg79kc0Ex4046m1/"+key).remove()
+		firebase.database().ref("/requests/"+that.props.state.account.uid+"/"+key).remove()
 		.then(ToastAndroid.show(constants.REQUEST_DECLINE_SUCCESS, ToastAndroid.SHORT));
 		//firebase.database().ref("/requests/"+that.props.state.account.uid+"/"+key).remove();
 	}
@@ -128,8 +61,9 @@ class MeetupScreen extends Component {
 			  'Accept Request',
 			  "("+meetup_name+')\n\nAre you sure you want to accept this meetup request?',
 			  [
+			  {text: 'Yes', onPress: ()=>{this.acceptRequest(request_key,meetup_key)}},
 			    {text: 'Cancel',  style: 'cancel'},
-			    {text: 'Yes', onPress: ()=>{this.acceptRequest(request_key,meetup_key)}},
+			    
 			  ],
 			  { cancelable: false }
 			)
@@ -140,8 +74,9 @@ class MeetupScreen extends Component {
 			  'Decline Request',
 			  "("+meetup_name+')\n\nAre you sure you want to decline this meetup request?',
 			  [
+			  {text: 'Yes', onPress: ()=>{this.deleteRequest(key)}},
 			    {text: 'Cancel',  style: 'cancel'},
-			    {text: 'Yes', onPress: ()=>{this.deleteRequest(key)}},
+			    
 			  ],
 			  { cancelable: false }
 			)
@@ -151,8 +86,8 @@ class MeetupScreen extends Component {
 		const { navigate } = this.props.navigation;
 		var that = this;
 		var returnValue = null;
-		{that.state.requests?
-			returnValue = that.state.requests.map((record,index)=>{
+		{that.props.state.meetups.meetupRequest?
+			returnValue = that.props.state.meetups.meetupRequest.map((record,index)=>{
 			var event_date = moment(record.event_date).format('LL')+" ("+record.event_time+")";
 			return(
 			

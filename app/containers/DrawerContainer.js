@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image, BackHandler} from 'react-native'
+import { StyleSheet, Text, View, Image, BackHandler, Alert} from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import styles from '../styles/styles_drawer';
 import { Container, Content, Icon, List, ListItem, Footer, FooterTab, Button } from "native-base";
@@ -12,17 +12,24 @@ const routes = [
 {title:"Home",routeName:"Home",icon:"home"},
 {title:"Profile",routeName:"Profile",icon:"md-person"},
 {title:"Meetup List",routeName:"Meetup",icon:"people"},
-{title:"Meetup Requests",routeName:"Requests",icon:"md-person-add"},
-{title:"Favorite Location",routeName:"FavoriteLocationScreen",icon:"md-star"}
+{title:"Meetup Requests",routeName:"Requests",icon:"md-star"},
+{title:"Friend Requests",routeName:"Friends",icon:"md-person-add"}
 ];
 
 class DrawerContainer extends React.Component {
 
-
 componentDidMount() {
   var that = this;
     BackHandler.addEventListener('hardwareBackPress', function() {
-      //alert("GESFS");
+    Alert.alert(
+        'Exit App',
+        'Are you sure you want to exit the app?',
+        [
+        {text: 'Exit', onPress: () => RNExitApp.exitApp()},
+          {text: 'Cancel',  style: 'cancel'},
+        ],
+        { cancelable: false }
+      );
     return true;
    });
    console.log("DRAWER NA KO", this.props.state.nav)

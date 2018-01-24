@@ -1,14 +1,9 @@
 import {UPDATE_MEETUP_FRIENDS, SEARCH_GOOGLE_PLACE_MEETUP, MEETUP_NAME,MEETUP_TIME,MEETUP_DATE,MEETUP_CLEAR_FORM,
-UPDATE_MEETUP_LIST} from '../../constants'
+UPDATE_MEETUP_LIST, UPDATE_MEETUP_REQUEST} from '../../constants'
 
 //initial values
 const initialState = {
-	selectedMeetupFriends:[
-		// {label:"Edbert Jason Estevez", value:"user1"}, 
-		// {label:"Gayle Duron", value:"user2"},
-		// {label:"Sample Name of Friend", value:"user3"}
-	],
-
+	selectedMeetupFriends:[],
 	event_name: '',
 	event_date: '',
 	event_time: '',
@@ -21,7 +16,8 @@ const initialState = {
 		address:'',
 		isActive: false
 	},
-	meetupList:[]
+	meetupList:[],
+	meetupRequest:[],
 }
 
 export default function accountReducer(state = initialState, action){
@@ -91,7 +87,15 @@ export default function accountReducer(state = initialState, action){
 					place: '',
 					address:'',
 					isActive: false
-				}
+				},
+				selectedMeetupFriends:[]
+			}
+		}break;
+
+		case UPDATE_MEETUP_REQUEST:{
+			return{
+				...state,
+				meetupRequest:action.array
 			}
 		}break;
 

@@ -20,12 +20,20 @@ export const MEETUP_NAME = 'MEETUP_NAME'
 export const MEETUP_DATE = 'MEETUP_DATE'
 export const MEETUP_TIME = 'MEETUP_TIME'
 export const MEETUP_CLEAR_FORM = 'MEETUP_CLEAR_FORM'
-
 export const UPDATE_MEETUP_LIST = 'UPDATE_MEETUP_LIST'
+
+//REQUESTS
+export const UPDATE_MEETUP_REQUEST = 'UPDATE_MEETUP_REQUEST'
+
+//FRIENDS
+export const UPDATE_FRIENDS_LABEL = 'UPDATE_FRIENDS_LABEL'
 
 //TOAST MESSAGES
 //meetup
 export const ADD_MEETUP_SUCCESS = "Meetup successfully created"
+export const DELETE_MEETUP_SUCCESS = "Meetup successfully deleted"
+export const LEAVE_MEETUP_SUCCESS = "You successfully left the meetup"
+export const UPDATE_MEETUP_SUCCESS = "Meetup successfully updated"
 export const INCOMPLETE_FORM = "Please fill up all fields"
 export const INCOMPLETE_FRIEND = "Select at least one (1) friend for the meetup"
 //request

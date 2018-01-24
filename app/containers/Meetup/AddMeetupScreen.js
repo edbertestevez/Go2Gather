@@ -88,9 +88,9 @@ class AddMeetupScreen extends Component {
 	        		})
 	        	)
 	        	.then(
+	        		that.props.actions.clearMeetupForm(),
 	        		// CLEAR ALL SA MEETUP STATE 
 	        		setTimeout(()=>{
-	        			that.props.actions.clearMeetupForm(),
 	        			ToastAndroid.show(constants.ADD_MEETUP_SUCCESS, ToastAndroid.SHORT),
 		    			that.setState({isCreating:false}),
 		    			that.props.navigation.navigate("Meetup")

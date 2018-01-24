@@ -9,7 +9,7 @@ export function enter_event_name(input){return (dispatch) => dispatch(event_name
 export function enter_event_date(input){return (dispatch) => dispatch(event_date(input))}
 export function enter_event_time(input){return (dispatch) => dispatch(event_time(input))}
 
-export function clearMeetupForm(){return (dispatch) => dispatch(clearForm)}
+export function clearMeetupForm(){return (dispatch) => dispatch(clearForm())}
 
 export function updateFriendMeetups(data){
 	return (dispatch) => {

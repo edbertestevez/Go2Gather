@@ -5,8 +5,8 @@ module.exports = StyleSheet.create({
     zIndex:2
   },
   profileImage:{
-  	width: 150,
-  	height: 150,
+  	width: 120,
+  	height: 120,
   	borderRadius: 110,
   	zIndex:10,
   	marginTop: 10,
@@ -14,7 +14,8 @@ module.exports = StyleSheet.create({
   user_name:{
     fontSize:20,
     color: '#fff',
-    marginTop: 20,
+    //marginTop: 20,
+    marginBottom: 15,
     fontWeight:'bold'
   },
   primaryColor:{
@@ -44,6 +45,7 @@ module.exports = StyleSheet.create({
     color:'#5b5d60',
   },
   viewMeetupTitle:{
+    width:"100%",
     color:"white",
     fontSize:23,
     fontWeight:"bold",

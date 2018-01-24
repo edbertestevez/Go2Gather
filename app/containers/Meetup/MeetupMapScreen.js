@@ -119,7 +119,6 @@ class MeetupMapScreen extends Component {
 						usersInfo: this.userList,
 						userButtons: this.buttonList
 					})
-					console.log("USERS",this.state.usersInfo);
 				});
 
 				//CHANGE RECORD OF INDIVIDUAL USER
@@ -181,7 +180,7 @@ class MeetupMapScreen extends Component {
 	componentDidMount() {
 	    var that = this;
 	    BackHandler.addEventListener('hardwareBackPress', function() {
-	    that.props.navigation.goBack();return true;f
+	    that.props.navigation.goBack();return true;
 	   });
 	  }
 	

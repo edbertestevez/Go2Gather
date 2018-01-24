@@ -14,7 +14,9 @@ import AddMeetupScreen from './containers/Meetup/AddMeetupScreen';
 import MeetupMapScreen from './containers/Meetup/MeetupMapScreen';
 import AddMeetupFriendScreen from './containers/Meetup/AddMeetupFriendScreen';
 import ViewMeetupScreen from './containers/Meetup/ViewMeetupScreen';
+import EditMeetupScreen from './containers/Meetup/EditMeetupScreen';
 import RequestScreen from './containers/Requests/RequestScreen';
+import SendMeetupInviteScreen from './containers/Requests/SendMeetupInviteScreen';
 
 import {Icon} from 'native-base';
 
@@ -103,6 +105,19 @@ export const AppNavigator = StackNavigator({
       headerTintColor:"#fff"
     }
   },
+  EditMeetup:{
+    screen: EditMeetupScreen,
+    navigationOptions:{
+      title: "Edit Meetup Mode",
+      headerStyle:{
+        backgroundColor:"#1b5454",
+      },
+      headerTitleStyle:{
+        color: '#fff'
+      },
+      headerTintColor:"#fff"
+    }
+  },
   MeetupMap:{
     screen:MeetupMapScreen,
     navigationOptions:{
@@ -111,6 +126,12 @@ export const AppNavigator = StackNavigator({
   },
   Requests:{
     screen:RequestScreen,
+    navigationOptions:{
+      header:null
+    }
+  },
+  SendMeetupInvite:{
+    screen:SendMeetupInviteScreen,
     navigationOptions:{
       header:null
     }
@@ -126,7 +147,8 @@ export const AppNavigator = StackNavigator({
     navigationOptions:{
       header:null
     }
-  }
+  },
+  
 },{
   //initialRouteName: 'Splash',
   //DRAWER Kung home, SPLASH kng loading
