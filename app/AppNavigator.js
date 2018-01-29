@@ -28,32 +28,9 @@ import {Icon} from 'native-base';
 //EDIT HERE 
 //Navigation ka pages
 // drawer stack
-const mainDrawer = DrawerNavigator({
-  
-  Home: { 
-    screen: HomeMainScreen,
-  },
-  Profile:{
-    screen: ProfileScreen,
-  },
-  Meetup:{
-    screen:MeetupScreen,
-  },
-  Requests:{
-    screen:RequestScreen,
-  },
-  FriendRequests:{
-    screen:FriendRequestScreen,
-  },
 
-},{
-  drawerOpenRoute: 'DrawerOpen',
-  drawerCloseRoute: 'DrawerClose',
-  drawerToggleRoute: 'DrawerToggle',
-  contentComponent: props => <DrawerContainer {...props} />
-});
 
-export const AppNavigator = StackNavigator({
+const Stacks = StackNavigator({
   Splash: { 
     screen: SplashScreen,
     navigationOptions:{
@@ -66,13 +43,6 @@ export const AppNavigator = StackNavigator({
   	navigationOptions:{
   		header: null
   	}
-  },
-  Drawer: { 
-    screen: mainDrawer, 
-    headerMode: 'float',
-    navigationOptions:{
-      header: null
-    }
   },
   //SAMPLE SCREENS FOR TESTING
   HomeMain: { 
@@ -186,6 +156,28 @@ export const AppNavigator = StackNavigator({
   //initialRouteName: 'Splash',
   //DRAWER Kung home, SPLASH kng loading
 });	
+
+const customNavigation = (getStateForAction) => (action, state) => {
+   const {type, routeName} = action;
+
+   return (
+      state &&
+      type === NavigationActions.NAVIGATE &&
+      routeName === state.routes[state.routes.length - 1].routeName
+   ) ? null : getStateForAction(action, state);
+};
+
+export const AppNavigator = DrawerNavigator({
+  Main: { 
+    screen: Stacks,
+  }
+},{
+  drawerOpenRoute: 'DrawerOpen',
+  drawerCloseRoute: 'DrawerClose',
+  drawerToggleRoute: 'DrawerToggle',
+  contentComponent: props => <DrawerContainer {...props} />
+});
+
 	/*
 const AppWithNavigationState = ({ dispatch, nav }) => (
   <AppNavigator navigation={addNavigationHelpers({ dispatch, state: nav })} />

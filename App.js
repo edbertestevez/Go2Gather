@@ -33,7 +33,7 @@ import location from './app/reducers/user/location';
 import meetups from './app/reducers/meetups/meetups';
 import all_users from './app/reducers/all_users';
 
-const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('SearchMeetup'));
+const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('Main'));
 
 const navReducer = (state = initialState, action) => {
   const nextState = AppNavigator.router.getStateForAction(action, state);

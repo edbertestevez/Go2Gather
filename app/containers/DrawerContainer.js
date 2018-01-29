@@ -9,7 +9,7 @@ import {bindActionCreators} from 'redux';
 import {ActionCreators} from '../actions'
 
 const routes = [
-{title:"Home",routeName:"Home",icon:"home"},
+{title:"Home",routeName:"HomeMain",icon:"home"},
 {title:"Profile",routeName:"Profile",icon:"md-person"},
 {title:"Meetup List",routeName:"Meetup",icon:"people"},
 {title:"Meetup Requests",routeName:"Requests",icon:"md-star"},

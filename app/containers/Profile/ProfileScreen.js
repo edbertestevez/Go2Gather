@@ -24,12 +24,12 @@ class ProfileScreen extends Component {
 	  };
 	  
 	}
-	componentDidMount() {
-	    var that = this;
-	    BackHandler.addEventListener('hardwareBackPress', function() {
-	    that.props.navigation.goBack();return true;
-	   });
-	  }
+	// componentDidMount() {
+	//     var that = this;
+	//     BackHandler.addEventListener('hardwareBackPress', function() {
+	//     that.props.navigation.goBack();return true;
+	//    });
+	//   }
 
 	componentWillMount(){
 		console.log("PROFILE NAVI", this.props.state.nav)

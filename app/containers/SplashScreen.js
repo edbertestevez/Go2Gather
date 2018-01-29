@@ -29,7 +29,7 @@ class SampleScreen extends Component {
 						action.updateAccount(snapshot.key,snapshot.val());
 						console.log('user logged');
 						//DRAWER INSTEAD OF HOME KAY AMO MANA ANG IYA DEFAULT STACK SA DRAWER ANG HOME
-						route="Drawer";
+						route="HomeMain";
 						setTimeout(()=>{navigate(route),ToastAndroid.show("Welcome, "+user_name+"!",ToastAndroid.SHORT)}, 1500);
 					}
 				})
