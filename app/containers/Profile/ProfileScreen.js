@@ -17,9 +17,9 @@ class ProfileScreen extends Component {
 	  super(props);
 	
 	  this.state = {
-	  	name:'Edbert Jason Estevez',
-	  	email: 'ejestevez26@gmail.com',
-	  	phone: '09995780425',
+	  	name:'',
+	  	email: "",
+	  	phone: '',
 	  	photo: '',
 	  };
 	  
@@ -27,18 +27,18 @@ class ProfileScreen extends Component {
 	componentDidMount() {
 	    var that = this;
 	    BackHandler.addEventListener('hardwareBackPress', function() {
-	    that.props.navigation.goBack();return true;f
+	    that.props.navigation.goBack();return true;
 	   });
 	  }
 
 	componentWillMount(){
 		console.log("PROFILE NAVI", this.props.state.nav)
-		// this.setState({
-		// 	name:this.props.state.account.name,
-		//   	email: this.props.state.account.email,
-		//   	phone: this.props.state.account.phone,
-		//   	photo: this.props.state.account.photo,
-		// });
+		this.setState({
+			name:this.props.state.account.name,
+		  	email: this.props.state.account.email,
+		  	phone: this.props.state.account.phone,
+		  	photo: this.props.state.account.photo,
+		});
 	}
 
 	render(){
@@ -59,13 +59,17 @@ class ProfileScreen extends Component {
 		        </Header>
 
 				<Content style={{}}>
-					<View style={{alignItems:'center',backgroundColor:'#4d5563'}}>
-						{/*<Image source={{uri: this.state.photo}} style={styles.profileImage}/>*/}
-						<Image source={require('../../img/logo.png')} style={styles.profileImage}/>
+					<View style={{alignItems:'center', justifyContent:"center", backgroundColor:'#4d5563'}}>
+						<Image source={{uri: this.state.photo}} style={styles.profileImage}/>
 						<Text style={styles.user_name}>{this.state.name}</Text>
-						{/*<Button info style={{width:150, justifyContent:'center',alignSelf:'center',marginTop:10}}>
-			            	<Text style={{color:'#fff'}}>Edit Profile</Text>
-			            </Button>*/}
+					
+						<View>
+							<Button iconLeft info rounded style={styles.roundButton}>
+								<Icon name="mode-edit" size={20} style={{color:"white", marginRight:10}}/>
+								<Text style={styles.buttonWhiteText}>Edit Profile</Text>
+							</Button>
+						</View>
+
 			            <View style={{marginBottom:20, flexDirection:"row"}}>
 			            	<Button transparent style={{borderRightWidth:1, borderColor:"#cacaca", padding:25}}>
 			            		<View style={{flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
@@ -90,7 +94,7 @@ class ProfileScreen extends Component {
 					<Form style={{marginLeft: 10, marginRight: 30, marginTop:15}}>
 		            	<Item stackedLabel>
 		              	<Label>Name:</Label>
-		              	<Input editable = {false} selectTextOnFocus={true} onChangeText={(name)=>this.setState({name})}>{this.state.email}</Input>
+		              	<Input editable = {false} selectTextOnFocus={true} onChangeText={(name)=>this.setState({name})}>{this.state.name}</Input>
 		            	</Item>
 
 		            	<Item stackedLabel>

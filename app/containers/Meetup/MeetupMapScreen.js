@@ -8,7 +8,7 @@ import {ActionCreators} from '../../actions'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 import MapViewDirections from 'react-native-maps-directions';
-import {Container, Header, Root, Content, ActionSheet, Fab, Text, Footer, FooterTab, StyleProvider, Left, Right, Button, Body, Title, Card, CardItem} from 'native-base';
+import {Container, Header, Root, Content, ActionSheet, Fab, Thumbnail, Text, Footer, FooterTab, StyleProvider, Left, Right, Button, Body, Title, Card, CardItem} from 'native-base';
 //CONTENT
 import styles from '../../styles/styles_main'
 //import GeocoderAPI from '../../config/geocoder';
@@ -48,7 +48,8 @@ class MeetupMapScreen extends Component {
 		aboutClicked: false,
 		//usersPoints:[],
 		userButtons:[],
-		usersInfo:[]
+		usersInfo:[],
+		showDirection: false,
 	  };
 
 	  this.userList=[];
@@ -76,12 +77,6 @@ class MeetupMapScreen extends Component {
 				longitude:  this.props.state.account.longitude,
 			},
 			regionPoint:{
-				longitude: state.params.info.longitude,
-				latitude: state.params.info.latitude,
-				longitudeDelta:0.004,
-				latitudeDelta:0.004,
-			},
-			regionBack:{
 				longitude: state.params.info.longitude,
 				latitude: state.params.info.latitude,
 				longitudeDelta:0.004,
@@ -195,6 +190,37 @@ class MeetupMapScreen extends Component {
 				latitudeDelta:0.004,
 			}
 		})
+		
+		this._map.animateToRegion({
+			latitude: that.props.state.account.latitude,
+			longitude: that.props.state.account.longitude,	
+			longitudeDelta:0.004,
+			latitudeDelta:0.004,
+		}, 500)
+	}
+
+	toggleDirection(){
+		var that = this;
+		console.log(that.state.showDirection);
+		that.state.showDirection == false ? that.setState({showDirection:true}) : that.setState({showDirection:false})
+	}
+
+	gotoMeetupLocation(){
+		var that = this;
+		this.setState({
+			regionPoint:{
+				latitude: that.state.meetup.latitude,
+				longitude: that.state.meetup.longitude,	
+				longitudeDelta:0.004,
+				latitudeDelta:0.004,
+			}
+		})
+		this._map.animateToRegion({
+			latitude: that.state.meetup.latitude,
+			longitude: that.state.meetup.longitude,	
+			longitudeDelta:0.004,
+			latitudeDelta:0.004,
+		}, 500)
 	}
 
 	gotoSelectedLocation(num){
@@ -210,6 +236,12 @@ class MeetupMapScreen extends Component {
 					latitudeDelta:0.004,
 				}
 			})
+			this._map.animateToRegion({
+				latitude: that.state.usersInfo[num-1].latitude,
+				longitude: that.state.usersInfo[num-1].longitude,	
+				longitudeDelta:0.004,
+				latitudeDelta:0.004,
+			},500)
 		}
 	}
 
@@ -296,38 +328,37 @@ class MeetupMapScreen extends Component {
 	        </View>
 	        :null
 	    	}
+
+			{this.state.regionPoint.latitude != 0 ?
 			<MapView
+				ref={component => {this._map = component;}}
 				style={StyleSheet.absoluteFill}
 				mapType={this.props.state.location.mapType}
-	        	region={{
+	        	initialRegion={{
 		            latitude: this.state.regionPoint.latitude,
 		            longitude: this.state.regionPoint.longitude,
-		            latitudeDelta: this.state.regionPoint.latitudeDelta,
-		            longitudeDelta: this.state.regionPoint.longitudeDelta,
-		          }}
-		        //onRegionChange={(data)=>this.setState({regionBack:data})}>   
-		        >
+		            latitudeDelta: 0.004,
+		            longitudeDelta: 0.004,
+		        }}
+		    >
 		        <Marker coordinate={{latitude: this.state.meetup.latitude,longitude: this.state.meetup.longitude,}}>
-			    <View><Image style={{width: 60, height:60}}source={require('../../img/maplogo.png')}/></View>
+			    <View><Image style={{width: 60, height:60}} source={require('../../img/maplogo.png')}/></View>
 			    </Marker>
 
 			   	{
 			   		this.state.usersInfo.map((record,index)=>{		
-			   		//console.log("PHOTO", this.state.usersInfo[index].photo)
-					var userPhoto = record.photo;
+			   		var userPhoto = record.photo;
 					return(
 					    <Marker 
 					    	coordinate={{
-					    		// latitude:this.state.usersInfo[index].latitude,
-					    		// longitude:this.state.usersInfo[index].longitude
 					    		latitude:record.latitude,
 					    		longitude:record.longitude
 					    	}} 
 					    	key={index}>
 					    <View>
 					    <Image style={{width: 60, height:60}}source={require('../../img/usermarker2.png')}/>
-					    <Image
-				          style={{width: 38, height: 38, position:'absolute', borderRadius:19, marginLeft:11, marginTop:4}}
+					    <Thumbnail
+				          style={{width: 38, height: 38, position:'absolute', marginLeft:11, marginTop:4}}
 				          source={{uri: userPhoto}}
 				        />
 					    </View>
@@ -339,22 +370,23 @@ class MeetupMapScreen extends Component {
 			    <Marker coordinate={{latitude: this.props.state.account.latitude,longitude: this.props.state.account.longitude,}}>
 			     <View>
 					    <Image style={{width: 60, height:60}}source={require('../../img/usermarker.png')}/>
-					    <Image
-				          style={{width: 38, height: 38, position:'absolute', borderRadius:19, marginLeft:11, marginTop:4}}
+					    <Thumbnail
+				          style={{width: 38, height: 38, position:'absolute', marginLeft:11, marginTop:4}}
 				          source={{uri: this.props.state.account.photo}}
 				        />
 			    </View>
 			    </Marker>
-	        
+
+	        	{this.state.showDirection == true ?
 	        	<MapViewDirections
 	              origin={{
 	              	//users location
-	                latitude: this.props.state.account.latitude,
+	                	latitude: this.props.state.account.latitude,
 			            longitude: this.props.state.account.longitude,
 	              }}
 	              destination={{
 	              	//destination search location
-	                latitude: this.state.meetup.latitude,
+	                	latitude: this.state.meetup.latitude,
 			            longitude: this.state.meetup.longitude,
 	              }}
 	              apikey={"AIzaSyD2AcRJkV3zokjx3oxmLJHBQOmRelqKPY0"}
@@ -366,17 +398,38 @@ class MeetupMapScreen extends Component {
 		            //   // console.log('GOT AN ERROR');
 		            // }}
 	            /> 
+	            :null}
 	        </MapView>
-
+	        :null}
 
 		        <Fab
-		            style={{backgroundColor:"#f2f2f2",zIndex:5,marginBottom:65}}
+		            style={{backgroundColor:"#f2f2f2",zIndex:5,marginBottom:195}}
 		            position="bottomRight"
 		            onPress={()=>this.gotoMyLocation()}>
 		            
 		            <Icon name="my-location" style={{ color:"#4f4f4f"}}/>
 		        </Fab>
+		        
+		        <Fab
+		            style={{backgroundColor:"#f2f2f2",zIndex:5,marginBottom:130}}
+		            position="bottomRight"
+		            onPress={()=>this.toggleDirection()}>
+		            <View style={{flexDirection:'column', justifyContent:"center", alignItems:"center"}}>
+		            {this.state.showDirection ?	
+		            	<Icon name="directions" style={{color:"#028fe5", fontSize:30}}/>
+		            :
+		            	<Icon name="directions" style={{color:"#4f4f4f", fontSize:30}}/>
+		        	}	
+		            </View>
+		        </Fab>
 
+		        <Fab
+		            style={{backgroundColor:"#1b5454",zIndex:5,marginBottom:65}}
+		            position="bottomRight"
+		            onPress={()=>this.gotoMeetupLocation()}>
+		            
+		            <Thumbnail source={require('../../img/logo.png')} style={{width:40, height:40}}/>
+		        </Fab>
 
 	            <Fab
 		            style={{backgroundColor:"#1b5454",zIndex:5}}

@@ -19,14 +19,15 @@ import RNExitApp from 'react-native-exit-app';
 
 //ACTION SHEET
 var BUTTONS = [
-{text:"Search By Name", icon: "search"}, 
+{text:"Search User", icon: "search"},
+{text:"Search Location By Name", icon: "search"}, 
 {text:"Random Location", icon: "md-add"}, 
 {text:"Restaurants", icon: "restaurant"}, 
 {text:"Resorts and Pools", icon: "home"}, 
 {text:"Mall and Recreation", icon: "ios-people"}, 
 {text:"Cancel", icon: "close"}
 ];
-var CANCEL_INDEX = 5;
+var CANCEL_INDEX = 6;
 
 class HomeMainScreen extends Component {
 
@@ -76,24 +77,41 @@ class HomeMainScreen extends Component {
 	      webClientId: "206519716919-v93fl7b6pupffparflkjqpl7f77hpr4h.apps.googleusercontent.com",
 	    })
 	    
-		//CHANGE THIS TO GEOCODER FOR EXACT LONG AND LAT
-		//console.log("Getting Initial Position . . .");
-		RNGooglePlaces.getCurrentPlace()
-        .then((results) => {
-          var initialPosition = {
-            latitude: results[0].latitude,
-            longitude: results[0].longitude,
-            place: results[0].name
-          }
-          this.props.actions.updateLocation(this.props.state.account, initialPosition);
-          })
-        .catch((error) => console.log(error.message));
+		//Geolocation
+		navigator.geolocation.getCurrentPosition(
+	      (position) => {
+	      	console.log("POSITION",position);
+	        var initialPosition = {
+	            latitude: position.coords.latitude,
+	            longitude: position.coords.longitude
+	          }
+	          this.props.actions.updateLocation(this.props.state.account, initialPosition);
+	      },
+	      (error) => console.log(error.message ),
+	      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 },
+	    );
+
+	    //Geolocation live updates
+	    this.watchId = navigator.geolocation.watchPosition(
+	      (position) => {
+	      	// var newPosition = {
+	       //      latitude: position.coords.latitude,
+	       //      longitude: position.coords.longitude
+	       //    }
+	       //    this.props.actions.updateLocation(this.props.state.account, newPosition);
+	       //  console.log(position)
+	      },
+	      (error) => console.log(error),
+	      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+	    );
 		
-		//UPDATE HERE!!!!!!!!!
         //pre-fetch all user's data
+        this.props.actions.loadAllUsers();
         this.props.actions.loadMeetupData(this.props.state.account.uid); //meetups
         this.props.actions.loadFriendsData(this.props.state.account.uid); //friends
-        this.props.actions.loadMeetupRequestData(this.props.state.account.uid); //friends
+        this.props.actions.loadMeetupRequestData(this.props.state.account.uid); //meetupsrequest
+        this.props.actions.loadFriendRequests(this.props.state.account.uid); //friends
+
 	}
 
 	componentWillUnmount() {
@@ -120,11 +138,14 @@ class HomeMainScreen extends Component {
 		              {
 		                options: BUTTONS,
 		                cancelButtonIndex: CANCEL_INDEX,
-		                title: "Search Location"
+		                title: "Search Mode"
 		              },
 		              buttonIndex => {
 		                switch(buttonIndex){
 		                	case 0:{
+		                		this.props.navigation.navigate("SearchUser");
+		                	}break;
+		                	case 1:{
 		                		this.props.actions.searchGooglePlace(this.props.state.location);
 		                	}break;
 		                }
@@ -184,8 +205,8 @@ class HomeMainScreen extends Component {
 		            </Button>
 		            
 		            <Button
-		            	//onPress={()=>this.props.navigation.navigate('Sample')} 
-		            	onPress={()=>this.props.actions.changeMapType("hybrid")}
+		            	onPress={()=>this.props.navigation.navigate('SearchMeetup')} 
+		            	//onPress={()=>this.props.actions.changeMapType("hybrid")}
 		            	active={this.props.state.location.mapType==='hybrid'} >
 		              <Text>Hybrid</Text>
 		            </Button>

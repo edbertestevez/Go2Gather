@@ -8,7 +8,7 @@ import {ActionCreators} from '../../actions'
 import { BackHandler } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapViewDirections from 'react-native-maps-directions';
-import {Container, Header, Fab, Content, Footer, StyleProvider, Left, Right, Button, Body, Title, Card, CardItem} from 'native-base';
+import {Container, Header, Fab, Thumbnail, Content, Footer, StyleProvider, Left, Right, Button, Body, Title, Card, CardItem} from 'native-base';
 //MAPS
 import MapView, {Marker, Callout} from 'react-native-maps';
 //import GeocoderAPI from '../../config/geocoder';
@@ -56,15 +56,41 @@ class HomeMap extends Component {
 				latitudeDelta:0.004,
 			}
 		})
+
+		this._map.animateToRegion({
+			latitude: that.props.state.account.latitude,
+			longitude: that.props.state.account.longitude,	
+			longitudeDelta:0.004,
+			latitudeDelta:0.004,
+		}, 500)
+	}
+
+	gotoMeetupLocation(){
+		var that = this;
+		this.setState({
+			regionPoint:{
+				latitude: that.props.state.location.searchPlace.latitude,
+				longitude: that.props.state.location.searchPlace.longitude,	
+				longitudeDelta:0.004,
+				latitudeDelta:0.004,
+			}
+		})
+		this._map.animateToRegion({
+			latitude: that.props.state.location.searchPlace.latitude,
+			longitude: that.props.state.location.searchPlace.longitude,	
+			longitudeDelta:0.004,
+			latitudeDelta:0.004,
+		}, 500)
 	}
 
 	render(){
 		return(
 			<View style={{flex:1}}>
 			<MapView
+				ref={component => {this._map = component;}}
 				style={StyleSheet.absoluteFill}
 				mapType={this.props.state.location.mapType}
-	        	region={{
+	        	initialRegion={{
 		            latitude: this.state.regionPoint.latitude,
 		            longitude: this.state.regionPoint.longitude,
 		            latitudeDelta: this.state.regionPoint.latitudeDelta,
@@ -125,14 +151,35 @@ class HomeMap extends Component {
 	            /> 
 	            :null}
 	        </MapView>
-	          
+	        
+	         	
+	        
+	        {this.props.state.location.searchPlace.place!="" ? 
 	          <Fab
+		            style={{backgroundColor:"#1b5454",zIndex:5}}
+		            position="bottomRight"
+		            onPress={()=>this.gotoMeetupLocation()}>
+		            
+		            <Thumbnail source={require('../../img/logo.png')} style={{width:40, height:40}}/>
+		        </Fab>
+		    :
+		    	 <Fab
 		            style={{backgroundColor:"#f2f2f2",zIndex:5}}
 		            position="bottomRight"
 		            onPress={()=>this.gotoMyLocation()}>
 		            
 		            <Icon name="my-location" style={{ color:"#4f4f4f"}}/>
 		        </Fab>
+			}
+			{this.props.state.location.searchPlace.place!="" ? 
+				<Fab
+		            style={{backgroundColor:"#f2f2f2",zIndex:5, marginBottom:65}}
+		            position="bottomRight"
+		            onPress={()=>this.gotoMyLocation()}>
+		            
+		            <Icon name="my-location" style={{ color:"#4f4f4f"}}/>
+		    	</Fab>
+		    :null}
 
 			</View>
 		);

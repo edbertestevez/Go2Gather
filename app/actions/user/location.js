@@ -5,6 +5,22 @@ import * as firebase from 'firebase';
 import {ToastAndroid} from 'react-native';
 import RNGooglePlaces from 'react-native-google-places';
 
+export function setLocationSearch(data, details){
+	return (dispatch) => {
+		if("opening_hours" in details){
+			dispatch(locationSearchSelected(data, details, details.opening_hours.open_now))
+		}else{
+			dispatch(locationSearchSelected(data, details, null))
+		}
+	}
+}
+
+export function clearLocationSearch(){
+	return (dispatch) => {
+		dispatch(locationSearchClear())
+	}
+}
+
 export function closeDirection(){
 	return (dispatch) => {
 		dispatch(directionClose());
@@ -20,7 +36,6 @@ export function toggleDirection(condition){
 export function updateLocation(account,location){
 	//alert("ACCOUNT "+JSON.stringify(account));
 	firebase.database().ref('/users/'+account.uid+"/location").update({
-			place: location.place,
 			latitude: location.latitude,
 			longitude: location.longitude
 		});
@@ -37,7 +52,7 @@ export function changeMapType(data){
 
 export function searchGooglePlace(initialPosition){
 	return (dispatch) => {
-		RNGooglePlaces.openAutocompleteModal({
+		RNGooglePlaces.openPlacePickerModal({
 	      country: "PH",
 	      latitude: initialPosition.latitude,
 	      longitude: initialPosition.longitude,
@@ -94,5 +109,20 @@ function directionToggle(condition){
 function directionClose(){
 	return{
 		type: constants.CLOSE_DIRECTION
+	}
+}
+
+function locationSearchSelected(data, details, open_now){
+	return{
+		type: "SET_LOCATION_SEARCH_DATA",
+		data,
+		details,
+		open_now
+	}
+}
+
+function locationSearchClear(){
+	return{
+		type: "CLEAR_LOCATION_SEARCH_DATA"
 	}
 }

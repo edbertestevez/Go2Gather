@@ -18,10 +18,13 @@ const initialState = {
 	},
 	meetupList:[],
 	meetupRequest:[],
+	
 }
 
 export default function accountReducer(state = initialState, action){
 	switch(action.type){
+
+		
 
 		case UPDATE_MEETUP_LIST:{
 			return{

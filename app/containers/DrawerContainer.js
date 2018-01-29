@@ -13,7 +13,7 @@ const routes = [
 {title:"Profile",routeName:"Profile",icon:"md-person"},
 {title:"Meetup List",routeName:"Meetup",icon:"people"},
 {title:"Meetup Requests",routeName:"Requests",icon:"md-star"},
-{title:"Friend Requests",routeName:"Friends",icon:"md-person-add"}
+{title:"Friend Requests",routeName:"FriendRequests",icon:"md-person-add"}
 ];
 
 class DrawerContainer extends React.Component {

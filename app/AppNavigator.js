@@ -7,16 +7,21 @@ import LoginScreen from './containers/LoginScreen';
 import SampleScreen from './containers/SampleScreen';
 import SplashScreen from './containers/SplashScreen';
 import HomeMainScreen from './containers/Home/HomeMainScreen';
+import SearchUserScreen from './containers/Home/SearchUserScreen';
 import DrawerContainer from './containers/DrawerContainer';
 import ProfileScreen from './containers/Profile/ProfileScreen';
+import OtherProfileScreen from './containers/Profile/OtherProfileScreen';
 import MeetupScreen from './containers/Meetup/MeetupScreen';
 import AddMeetupScreen from './containers/Meetup/AddMeetupScreen';
 import MeetupMapScreen from './containers/Meetup/MeetupMapScreen';
 import AddMeetupFriendScreen from './containers/Meetup/AddMeetupFriendScreen';
+
 import ViewMeetupScreen from './containers/Meetup/ViewMeetupScreen';
 import EditMeetupScreen from './containers/Meetup/EditMeetupScreen';
 import RequestScreen from './containers/Requests/RequestScreen';
+import FriendRequestScreen from './containers/Requests/FriendRequestScreen';
 import SendMeetupInviteScreen from './containers/Requests/SendMeetupInviteScreen';
+import SearchMeetupScreen from './containers/Search/SearchMeetupScreen';
 
 import {Icon} from 'native-base';
 
@@ -36,7 +41,10 @@ const mainDrawer = DrawerNavigator({
   },
   Requests:{
     screen:RequestScreen,
-  }
+  },
+  FriendRequests:{
+    screen:FriendRequestScreen,
+  },
 
 },{
   drawerOpenRoute: 'DrawerOpen',
@@ -69,6 +77,13 @@ export const AppNavigator = StackNavigator({
   //SAMPLE SCREENS FOR TESTING
   HomeMain: { 
     screen: HomeMainScreen,
+    headerMode: 'screen',
+    navigationOptions:{
+      header: null,
+    } 
+  },
+  SearchUser: { 
+    screen: SearchUserScreen,
     headerMode: 'screen',
     navigationOptions:{
       header: null,
@@ -130,6 +145,12 @@ export const AppNavigator = StackNavigator({
       header:null
     }
   },
+  FriendRequests:{
+    screen:FriendRequestScreen,
+    navigationOptions:{
+      header:null
+    }
+  },
   SendMeetupInvite:{
     screen:SendMeetupInviteScreen,
     navigationOptions:{
@@ -148,6 +169,18 @@ export const AppNavigator = StackNavigator({
       header:null
     }
   },
+  OtherProfile:{
+    screen:OtherProfileScreen,
+    navigationOptions:{
+      header:null
+    }
+  },
+  SearchMeetup:{
+    screen:SearchMeetupScreen,
+    navigationOptions:{
+      header:null
+    }
+  }
   
 },{
   //initialRouteName: 'Splash',

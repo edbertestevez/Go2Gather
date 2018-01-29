@@ -135,7 +135,7 @@ class ViewMeetupScreen extends Component {
 						<View>
 							<Text style={styles.viewMeetupTitle}>{this.state.meetupData.event_name}</Text>
 						</View>
-						<View>
+						<View style={{marginBottom:-5}}>
 							<Button 
 								iconLeft rounded danger 
 								style={styles.roundButton}

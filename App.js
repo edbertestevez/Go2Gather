@@ -31,8 +31,9 @@ import thunk from 'redux-thunk'
 import account from './app/reducers/user/account';
 import location from './app/reducers/user/location';
 import meetups from './app/reducers/meetups/meetups';
+import all_users from './app/reducers/all_users';
 
-const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('Splash'));
+const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('SearchMeetup'));
 
 const navReducer = (state = initialState, action) => {
   const nextState = AppNavigator.router.getStateForAction(action, state);
@@ -45,7 +46,8 @@ const appReducer = combineReducers({
   account,
   meetups,
   nav: navReducer,
-  location
+  location,
+  all_users
 });
 
 

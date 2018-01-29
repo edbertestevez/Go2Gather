@@ -23,7 +23,7 @@ class SampleScreen extends Component {
 		let route;
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
-				firebase.database().ref("/users/"+user.uid).on('value', (snapshot) => {
+				firebase.database().ref("/users/"+user.uid).once('value', (snapshot) => {
 					if(snapshot.exists()){
 						var user_name = snapshot.child("name").val();
 						action.updateAccount(snapshot.key,snapshot.val());
@@ -32,6 +32,12 @@ class SampleScreen extends Component {
 						route="Drawer";
 						setTimeout(()=>{navigate(route),ToastAndroid.show("Welcome, "+user_name+"!",ToastAndroid.SHORT)}, 1500);
 					}
+				})
+
+				firebase.database().ref("/users/"+user.uid).on('child_changed', (snapshot) => {
+					firebase.database().ref("/users/"+user.uid).once('value', (snapshot) => {
+						action.updateAccount(snapshot.key,snapshot.val());
+					})
 				})
 					
 				

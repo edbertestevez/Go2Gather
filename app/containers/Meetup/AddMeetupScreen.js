@@ -17,7 +17,6 @@ import Moment from 'react-moment';
 import styles from '../../styles/styles_main'
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import * as constants from '../../constants'
-import MultiSelect from 'react-native-multiple-select';
 class AddMeetupScreen extends Component {
 
 	/*NO REDUX FOR NOW*/
@@ -33,7 +32,8 @@ class AddMeetupScreen extends Component {
 	componentDidMount() {	
 	    var that = this;
 		    BackHandler.addEventListener('hardwareBackPress', function() {
-		    that.props.navigation.navigate("Meetup");
+		    //that.props.navigation.navigate("Meetup");
+		    that.props.navigation.goBack();
 		    return true;
 		});
 	}
@@ -54,7 +54,7 @@ class AddMeetupScreen extends Component {
     		that.props.state.meetups.newMeetupLocation.latitude == 0 
     	){
     		ToastAndroid.show(constants.INCOMPLETE_FORM, ToastAndroid.SHORT);
-    	}else if(that.props.state.meetups.selectedMeetupFriends.length>0){
+    	}else if(that.props.state.meetups.selectedMeetupFriends.length>=0){
 	    	this.setState({isCreating:true})
 	    	let new_key = firebase.database().ref("/meetups_users/"+user_uid).push().getKey();
 
@@ -112,6 +112,7 @@ class AddMeetupScreen extends Component {
     }
 
 	render(){
+		console.log(this.props.state.meetups.newMeetupLocation)
 		return(
 			<Container>
 				<Content padder style={{flex:1}}>
@@ -200,10 +201,11 @@ class AddMeetupScreen extends Component {
 			              	<Icon name="account-location" style={{position:'absolute',left:0}} size={25}/>
 			              	</Left>
 			              	<TouchableOpacity 
-			            	onPress={()=>this.props.actions.searchGooglePlaceMeetup(this.props.state.location)}
+			            	//onPress={()=>this.props.actions.searchGooglePlaceMeetup(this.props.state.location)}
+			            	onPress={()=>this.props.navigation.navigate("SearchMeetup")}
 			            	style={{width:'100%',height:60, borderBottomWidth:1, borderBottomColor:'#cacaca',marginLeft:0,justifyContent:'center',alignItems:'center'}}>
 				           		{this.props.state.meetups.newMeetupLocation.place?
-				           			<Text style={{fontSize:16}}>{this.props.state.meetups.newMeetupLocation.place}</Text>
+				           			<Text style={{fontSize:16, color:"#1b5454", fontWeight:"bold"}}>{this.props.state.meetups.newMeetupLocation.place}</Text>
 				           			:<Text style={{fontSize:16}}>Meetup Place</Text>}
 			            	</TouchableOpacity>
 		            	</Item>

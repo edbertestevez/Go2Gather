@@ -25,23 +25,45 @@ const initialState = {
 		address:'',
 		isActive: false
 	},
-	
+	locationSearchData:[],
+	locationSearchDetails:[],
 
-
-
-	/*
-	maptypes: standard, satellite, hybrid, terrain
-	*/
 }
 
 export default function accountReducer(state = initialState, action){
 	switch(action.type){
+
+		case "CLEAR_LOCATION_SEARCH_DATA":{
+			return{
+				...state,
+				locationSearchData:[],
+				locationSearchDetails:[]
+			}
+		}break;
+
+		case "SET_LOCATION_SEARCH_DATA":{
+			return{
+				...state,
+				locationSearchData:action.data,
+				locationSearchDetails:{
+					name: action.details.name,
+					rating: action.details.rating,
+					formatted_address: action.details.formatted_address,
+					website: action.details.website,
+					formatted_phone_number: action.details.formatted_phone_number,
+					open_now:action.open_now,
+					reviews: action.details.reviews,
+					photos: action.details.photos,
+					latitude: action.details.geometry.location.lat,
+					longitude: action.details.geometry.location.lng
+				}
+			}
+		}break;
 		case UPDATE_POSITION:{
 			return{
 				...state,
 				longitude: action.data.longitude,
 				latitude: action.data.latitude,
-				place: action.data.place
 			}
 		}break;
 

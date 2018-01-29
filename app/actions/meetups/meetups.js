@@ -4,6 +4,21 @@ import * as firebase from 'firebase';
 import {ToastAndroid} from 'react-native';
 import RNGooglePlaces from 'react-native-google-places';
 
+export function setMeetupPlace(){
+	return(dispatch, getState) => {
+		const currentState = getState();
+		var meetupLocation = [];
+		meetupLocation ={
+			address: currentState.location.locationSearchDetails.formatted_address,
+			name: currentState.location.locationSearchDetails.name,
+			longitude: currentState.location.locationSearchDetails.longitude,
+			latitude: currentState.location.locationSearchDetails.latitude,
+
+		}
+		console.log(meetupLocation);
+		dispatch(setGooglePlaceSearchMeetup(meetupLocation));
+	}
+}
 
 export function enter_event_name(input){return (dispatch) => dispatch(event_name(input))}
 export function enter_event_date(input){return (dispatch) => dispatch(event_date(input))}
@@ -55,6 +70,7 @@ function updateMeetupFriends(data){
 }
 
 function setGooglePlaceSearchMeetup(data){
+	console.log(data)
   //console.log("Opening Google Place Search For Meetup. . . ");
   return{
     type: constants.SEARCH_GOOGLE_PLACE_MEETUP,

@@ -1,5 +1,5 @@
 import {LOGIN_USER, LOGOUT_USER, UPDATE_ACCOUNT,CHECK_LOGIN,
-UPDATE_FRIENDS_LABEL} from '../../constants'
+UPDATE_FRIENDS_LABEL, UPDATE_FRIEND_REQUEST} from '../../constants'
 
 //initial values
 const initialState = {
@@ -7,12 +7,13 @@ const initialState = {
 	name: '',
 	email: '',
 	photo: "",
-	longitude:  0,
-	latitude: 0,
+	longitude:  10.678546,
+	latitude: 122.954418,
 	phone: '',
 	isLogged: null,
 	isCheckingAccount: false,
 	friendsLabel:[],
+	friendRequests:[],
 
 	
 	// uid: 'r7j4h1KOmOXekp3ZNZ2xXfX7Qgc2',
@@ -66,7 +67,15 @@ export default function accountReducer(state = initialState, action){
 				...state,
 				friendsLabel: action.array
 			}
-		}
+		}break;
+
+		case UPDATE_FRIEND_REQUEST:{
+			return{
+				...state,
+				friendRequests: action.array
+			}
+		}break;
+
 		default: return state
 	}
 }	

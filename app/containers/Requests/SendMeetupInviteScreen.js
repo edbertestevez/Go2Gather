@@ -36,19 +36,20 @@ class SendMeetupInviteScreen extends Component {
 
 		const {state} = this.props.navigation;
 		this.setState({meetupData:state.params.info})
-		this.setState({goingData:state.params.going})
+		this.setState({goingData:state.params.going}) //going persons
 
 	{/*FIX THIS ONE BRO*/}
-		// this.allFriends = this.props.state.account.friendsLabel;
-		// console.log("ALL FRIENDS", this.allFriends);
-		// firebase.database().ref("/meetups/"+state.params.info.key+"/users").on("child_added", (snapshot)=>{
-		// 	//get ang wala sa record then push to array for label
-		// 		var recordLabel = this.allFriends.find((value)=>{
-		// 			return value.value != snapshot.key;
-		// 		});
-		// 		console.log(recordLabel)
-			
-		// })
+		this.allFriends = this.props.state.account.friendsLabel;
+		this.allFriends.map((record,index)=>{
+			if(state.params.going.findIndex((value)=>value.key==record.value) === -1){
+				this.unlistedFriends.push({
+					label: record.label,
+					value: record.value
+				})
+				console.log(this.unlistedFriends)
+				this.setState({unlistedFriendsLabel:this.unlistedFriends})
+			}
+		});
 	}
 
 	componentDidMount(){
@@ -75,6 +76,10 @@ class SendMeetupInviteScreen extends Component {
 	        		meetup_id: that.state.meetupData.key,
 	        		requestor: that.props.state.account.uid
 	        	})
+	        	.then(
+	        		ToastAndroid.show(constants.REQUEST_SENT,ToastAndroid.SHORT),
+	        		that.props.navigation.goBack(),
+	        	)
 	        })
 		}else{
 			ToastAndroid.show(constants.INCOMPLETE_FRIEND, ToastAndroid.SHORT);
@@ -82,7 +87,6 @@ class SendMeetupInviteScreen extends Component {
 	}
 
 	renderLabel = (label, style) => {
-	  console.log(label)
 	  return (
 	    <View style={{flexDirection: 'row', alignItems: 'center'}}>
 	      <Image style={{width: 25, height: 25}} source={{uri: 'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-group-512.png'}} />
@@ -106,8 +110,8 @@ class SendMeetupInviteScreen extends Component {
 					 <Right style={{flexDirection:"row",flex:1 }}>
 						 <Button 
 						 	transparent iconLeft
-						 	//onPress={()=>this.sendRequests()}
-							onPress={()=>console.log(this.state)}
+						 	onPress={()=>this.sendRequests()}
+							// onPress={()=>console.log(this.state)}
 						>
 						 	<Text style={{color:"white", fontSize:18, fontWeight:'bold'}}>Send</Text>
 						 </Button>
@@ -130,8 +134,8 @@ class SendMeetupInviteScreen extends Component {
 			        </InputGroup>
 					{this.state.isGettingData ? <Spinner color='#000'/>:null}
 					<SelectMultiple
-					//update sa nakwa na record sa sulod ka willMount
-			          items={this.props.state.account.friendsLabel}
+					
+			          items={this.state.unlistedFriendsLabel}
 			          renderLabel={this.renderLabel}
 			          selectedItems={this.state.selectedFriends}
 			          onSelectionsChange={this.onSelectionsChange} 

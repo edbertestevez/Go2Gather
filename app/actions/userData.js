@@ -3,6 +3,33 @@ import firebaseApp from '../config/firebase';
 import * as firebase from 'firebase';
 import {ToastAndroid} from 'react-native';
 
+
+export function loadAllUsers(){
+	const allUsersList = [];
+	return (dispatch, getState) => {
+		firebase.database().ref("/users/").on("child_added", (snapshot)=>{
+			var key = snapshot.key;
+			var name = snapshot.child("name").val();
+			var photo = snapshot.child("photo").val();
+			var phone = snapshot.child("phone").val();
+			var email = snapshot.child("email").val();
+			var longitude = snapshot.child("location").child("longitude").val();
+			var latitude = snapshot.child("location").child("latitude").val();
+			var location = {latitude:latitude,longitude:longitude}
+			allUsersList.push({
+				key:key,
+				name:name,
+				email:email,
+				phone:phone,
+				photo:photo,
+				location:location
+			})
+
+			dispatch(updateAllUsers(allUsersList))
+		});
+	}
+}
+
 export function loadMeetupData(user_uid){
 	//return(dispatch, state, middleWare)
 	return (dispatch, getState) => {
@@ -132,6 +159,56 @@ export function loadFriendsData(user_uid){
 			});
 			
 		});
+		firebase.database().ref("/users_friends/"+user_uid).on("child_removed",(snapshot)=>{
+			var indexRemove = friendsLabel.findIndex((value)=>value.value==snapshot.key);
+			console.log("Index from list", indexRemove)
+			
+			if(indexRemove!=-1){
+				//New List of STATE
+				var newList = friendsLabel;
+				newList.splice(indexRemove,1)
+				dispatch(updateFriendsLabel(newList))
+			}
+		});
+	}
+}
+
+//UPDATE THIS ONE
+export function loadFriendRequests(user_uid){
+	const friendRequestList = [];
+	return(dispatch) =>{
+		firebase.database().ref("/friend_requests/"+user_uid).on("child_added",(snapshot)=>{
+			console.log("FRIEND REQUEST: "+snapshot.key)
+			if(snapshot.val()==true){
+				firebase.database().ref("/users/"+snapshot.key).once("value",(userSnap)=>{
+					requestor_key = snapshot.key;
+					requestor_email = userSnap.child("email").val();
+					requestor_name = userSnap.child("name").val();
+					requestor_photo = userSnap.child("photo").val();
+
+					friendRequestList.push({
+						requestor_key:requestor_key,
+						requestor_email:requestor_email,
+						requestor_name:requestor_name,
+						requestor_photo:requestor_photo
+					})
+
+					dispatch(updateFriendRequestList(friendRequestList))
+				});
+			}
+		});
+
+		firebase.database().ref("/friend_requests/"+user_uid).on("child_removed",(snapshot)=>{
+			var indexRemove = friendRequestList.findIndex((value)=>value.requestor_key==snapshot.key);
+			console.log("Index from list", indexRemove)
+			
+			if(indexRemove!=-1){
+				//New List of STATE
+				var newReqList = friendRequestList;
+				newReqList.splice(indexRemove,1)
+				dispatch(updateFriendRequestList(newReqList))
+			}
+		});
 	}
 }
 
@@ -146,7 +223,7 @@ export function loadMeetupRequestData(user_uid){
 			var requestor_photo = '';
 			var request_key = snapshot.key;
 			console.log(meetup_key);
-			firebase.database().ref("/users/"+requestor_id).on("value",(userSnap)=>{
+			firebase.database().ref("/users/"+requestor_id).once("value",(userSnap)=>{
 				requestor_name = userSnap.child("name").val();
 				requestor_photo = userSnap.child("photo").val();
 
@@ -195,6 +272,13 @@ export function loadMeetupRequestData(user_uid){
 
 
 //FUNCTIONS
+function updateAllUsers(array){
+  return{
+    type: constants.UPDATE_ALL_USERS,
+    array
+  }
+}
+
 function updateMeetupList(array){
   return{
     type: constants.UPDATE_MEETUP_LIST,
@@ -212,6 +296,13 @@ function updateFriendsLabel(array){
 function updateMeetupRequest(array){
 	return {
 		type: constants.UPDATE_MEETUP_REQUEST,
+		array
+	}
+}
+
+function updateFriendRequestList(array){
+	return {
+		type: constants.UPDATE_FRIEND_REQUEST,
 		array
 	}
 }

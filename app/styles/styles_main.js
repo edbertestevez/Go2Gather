@@ -15,7 +15,7 @@ module.exports = StyleSheet.create({
     fontSize:20,
     color: '#fff',
     //marginTop: 20,
-    marginBottom: 15,
+    marginBottom: 5,
     fontWeight:'bold'
   },
   primaryColor:{
@@ -51,8 +51,35 @@ module.exports = StyleSheet.create({
     fontWeight:"bold",
     marginBottom:15
   },
+  roundButtonNoBottomProfile:{
+    paddingLeft:15, paddingRight:25,marginRight:8, marginTop:-5
+  },
   roundButton:{
     paddingLeft:15, paddingRight:25, marginBottom:20,marginRight:8
-  }
+  },
+  selectRoundButton:{
+    paddingLeft:30, paddingRight:30, marginRight:5
+  },
+  buttonWhiteText:{
+    color:"white",
+    fontSize:14
+  },
+  buttonBlackText:{
+    color:"black",
+    fontSize:14
+  },
+  roundImage70:{
+    borderRadius:50
+  },
+  roundButtonNoIcon:{
+    paddingLeft:25, paddingRight:25, marginBottom:20,marginRight:8
+  },
+  searchNearbyButton:{
+    justifyContent:"center", alignItems:"center",
+    shadowOffset: { width: 0, height: 2 },shadowOpacity: 0.8,
+    shadowRadius: 3,shadowColor:"#000",elevation:2, marginRight:12, width: 100, height: 110, backgroundColor:"#fff", borderRadius:15
+  },
+  
+
   
 });
