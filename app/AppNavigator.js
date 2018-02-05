@@ -22,6 +22,7 @@ import RequestScreen from './containers/Requests/RequestScreen';
 import FriendRequestScreen from './containers/Requests/FriendRequestScreen';
 import SendMeetupInviteScreen from './containers/Requests/SendMeetupInviteScreen';
 import SearchMeetupScreen from './containers/Search/SearchMeetupScreen';
+import SearchCategoryScreen from './containers/Search/SearchCategoryScreen';
 
 import {Icon} from 'native-base';
 
@@ -31,6 +32,12 @@ import {Icon} from 'native-base';
 
 
 const Stacks = StackNavigator({
+   SearchMeetup:{
+    screen:SearchMeetupScreen,
+    navigationOptions:{
+      header:null
+    }
+  },
   Splash: { 
     screen: SplashScreen,
     navigationOptions:{
@@ -145,12 +152,14 @@ const Stacks = StackNavigator({
       header:null
     }
   },
-  SearchMeetup:{
-    screen:SearchMeetupScreen,
+ 
+  SearchCategory:{
+    screen: SearchCategoryScreen,
     navigationOptions:{
       header:null
-    }
-  }
+    },
+  },
+  
   
 },{
   //initialRouteName: 'Splash',

@@ -34,7 +34,7 @@ class SearchArea extends Component {
         selectTextOnFocus={true}
           placeholder='Search'
           minLength={1} // minimum length of text to search
-          autoFocus={true}
+          autoFocus={false}
           returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
           listViewDisplayed='auto'    // true/false/undefined
           fetchDetails={true}

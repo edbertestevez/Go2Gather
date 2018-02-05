@@ -19,6 +19,7 @@ import MapView, {Marker, Callout} from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import SearchArea from '../../components/meetup/SearchArea';
 import SearchLocationDetailsScreen from './SearchLocationDetailsScreen';
+import SearchMap from './SearchMap';
 
 class SearchMeetupScreen extends Component {
 	constructor(props) {
@@ -40,7 +41,7 @@ class SearchMeetupScreen extends Component {
 		var that = this;
 		    BackHandler.addEventListener('hardwareBackPress', function() {
 		    //that.props.navigation.navigate("Meetup");
-		   	if(that.props.state.locationSearchDetails.name!=""){
+		   	if(that.props.state.location.locationSearchDetails.name!=""){
 		   		that.props.actions.clearLocationSearch();
 		   	}else{
 		   		that.props.navigation.goBack();
@@ -88,12 +89,15 @@ class SearchMeetupScreen extends Component {
 						:null}
 					</Right>
 				</Header>
-
 				
+				<SearchMap style={{position: "absolute",zIndex:0, flex:1}}/>
+
 				<Content>	
 					{/*CONTAINS THE INFORMATION ABOUT THE PLACE*/}
 					{searchDetails.name ? null : <SearchArea/>}
 
+						
+					
 					{searchDetails.photos?
 					searchDetails.photos.map((record,index)=>{
 						if(index==0){
